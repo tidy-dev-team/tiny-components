@@ -1,5 +1,5 @@
 // Component registry - full component list
-import { ComponentRegistry } from "../types";
+import { ComponentRegistry } from "./types";
 
 export const componentGroups = [
   // Avatar group

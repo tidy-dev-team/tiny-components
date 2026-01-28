@@ -1,11 +1,16 @@
-import { EventHandler } from '@create-figma-plugin/utilities'
-
-export interface CreateRectanglesHandler extends EventHandler {
-  name: 'CREATE_RECTANGLES'
-  handler: (count: number) => void
+export interface ComponentRegistry {
+  [key: string]: ComponentInfo;
 }
 
-export interface CloseHandler extends EventHandler {
-  name: 'CLOSE'
-  handler: () => void
+export interface ComponentInfo {
+  key: string;
+  name: string;
+  type?: string;
 }
+
+export const FIND_COMPONENTS_EVENT = "FIND_COMPONENTS" as const;
+export type PluginEvent = typeof FIND_COMPONENTS_EVENT;
+export type FindComponentsEventHandler = {
+  name: typeof FIND_COMPONENTS_EVENT;
+  handler: () => void;
+};
