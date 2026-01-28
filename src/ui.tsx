@@ -12,15 +12,17 @@ import { h } from "preact";
 import {
   FIND_COMPONENTS_EVENT,
   FindComponentsEventHandler,
+  REPLACE_COMPONENTS_EVENT,
+  ReplaceComponentsEventHandler,
 } from "./types";
 
 function Plugin() {
-  function handleButtonClick() {
-    console.log("replace with components button clicked");
-  }
-
   function handleFindComponentsClick() {
     emit<FindComponentsEventHandler>(FIND_COMPONENTS_EVENT);
+  }
+
+  function handleReplaceComponentsClick() {
+    emit<ReplaceComponentsEventHandler>(REPLACE_COMPONENTS_EVENT);
   }
   return (
     <div>
@@ -52,7 +54,7 @@ function Plugin() {
             <Button secondary fullWidth onClick={handleFindComponentsClick}>
               find components
             </Button>
-            <Button fullWidth onClick={handleButtonClick}>
+            <Button fullWidth onClick={handleReplaceComponentsClick}>
               replace with components
             </Button>
           </div>
