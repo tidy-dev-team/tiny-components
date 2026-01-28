@@ -13,7 +13,7 @@ type ComponentMatcher = {
   test: (normalizedName: string) => boolean;
 };
 
-const componentCache = new Map<string, ComponentNode>();
+const componentCache = new Map<string, ComponentSetNode | ComponentNode>();
 const componentMatchers: ComponentMatcher[] = [
   {
     componentName: "Buttons",
@@ -134,8 +134,16 @@ async function replaceFrameWithComponent(
     return null;
   }
 
-  const component = await getComponentNodeByKey(componentInfo.key);
+  const node = await getComponentNodeByKey(componentInfo.key);
+  if (node === null) {
+    return null;
+  }
+
+  // For component sets, use the default variant to create an instance
+  const component =
+    node.type === "COMPONENT_SET" ? node.defaultVariant : node;
   if (component === null) {
+    console.error("Component set has no default variant");
     return null;
   }
 
@@ -147,10 +155,23 @@ async function replaceFrameWithComponent(
   return instance;
 }
 
-async function getComponentNodeByKey(key: string) {
+async function getComponentNodeByKey(
+  key: string
+): Promise<ComponentSetNode | ComponentNode | null> {
   if (componentCache.has(key)) {
     return componentCache.get(key)!;
   }
+
+  // Try importing as component set first (e.g., "Buttons" with variants)
+  try {
+    const componentSet = await figma.importComponentSetByKeyAsync(key);
+    componentCache.set(key, componentSet);
+    return componentSet;
+  } catch {
+    // Not a component set, try as regular component
+  }
+
+  // Fallback to regular component
   try {
     const component = await figma.importComponentByKeyAsync(key);
     componentCache.set(key, component);
