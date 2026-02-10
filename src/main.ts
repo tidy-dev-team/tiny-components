@@ -77,6 +77,9 @@ async function handleReplaceComponents() {
     replacements.push(replacement);
   }
 
+  // Update "Container" wrapper frames to use HUG sizing
+  updateContainerWrappersToHug(replacements);
+
   if (replacements.length === 0) {
     figma.notify("No replacements were applied.");
     return;
@@ -223,5 +226,48 @@ function applyFrameGeometry(source: FrameNode, target: InstanceNode) {
   // Copy rotation if any
   if (source.rotation !== 0) {
     target.rotation = source.rotation;
+  }
+}
+
+/**
+ * Finds parent frames named "Container" that directly wrap replaced instances
+ * and sets their horizontal and vertical sizing to HUG.
+ */
+function updateContainerWrappersToHug(instances: InstanceNode[]) {
+  const processed = new Set<string>();
+
+  for (const instance of instances) {
+    const parent = instance.parent;
+    if (parent === null || parent.type !== "FRAME") {
+      continue;
+    }
+
+    if (processed.has(parent.id)) {
+      continue;
+    }
+
+    if (parent.name.toLowerCase() !== "container") {
+      continue;
+    }
+
+    // Verify that all direct children are component instances
+    const allChildrenAreInstances = parent.children.every(
+      (child) => child.type === "INSTANCE"
+    );
+    if (!allChildrenAreInstances) {
+      continue;
+    }
+
+    // Set sizing to HUG on both axes (requires auto-layout)
+    try {
+      if (parent.layoutMode !== "NONE") {
+        parent.layoutSizingHorizontal = "HUG";
+        parent.layoutSizingVertical = "HUG";
+      }
+    } catch {
+      // May fail if the frame doesn't support these properties
+    }
+
+    processed.add(parent.id);
   }
 }
