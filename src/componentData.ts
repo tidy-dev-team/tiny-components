@@ -49,6 +49,14 @@ export function findMappingForFrame(
   return null;
 }
 
+/**
+ * Strips all hyphens, underscores, and spaces from a string.
+ * e.g. "Card-Insurance-Coverage" → "cardinsurancecoverage"
+ */
+function normalize(value: string): string {
+  return value.toLowerCase().replace(/[-_\s]+/g, "");
+}
+
 // Check if a frame name matches a matcher
 function matchesFrame(normalizedName: string, matcher: FrameMatcher): boolean {
   const matchValue = matcher.value.toLowerCase();
@@ -60,6 +68,8 @@ function matchesFrame(normalizedName: string, matcher: FrameMatcher): boolean {
       return normalizedName === matchValue;
     case "nameStartsWith":
       return normalizedName.startsWith(matchValue);
+    case "nameFuzzy":
+      return normalize(normalizedName) === normalize(matchValue);
     default:
       return false;
   }

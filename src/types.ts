@@ -58,7 +58,7 @@ export interface ComponentMapping {
 }
 
 export interface FrameMatcher {
-  type: "nameContains" | "nameEquals" | "nameStartsWith";
+  type: "nameContains" | "nameEquals" | "nameStartsWith" | "nameFuzzy";
   value: string;
 }
 

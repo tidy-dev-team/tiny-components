@@ -2,11 +2,43 @@
   "$schema": "https://tidy-ds.dev/schemas/property-mappings/v1.json",
   "version": "1.0.0",
   "mappings": {
+    "search": {
+      "componentKey": "3f706a2eb3c460efdffbf7f9b637aa61b56866ae",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "search"
+      },
+      "properties": []
+    },
     "sidebar": {
       "componentKey": "26a68bc8e9011740083efe8216701290e7cefe87",
       "frameMatcher": {
-        "type": "nameContains",
+        "type": "nameFuzzy",
         "value": "sidebar"
+      },
+      "properties": []
+    },
+    "cardInsuranceCoverage": {
+      "componentKey": "bc161bddce40f95821730f6331466398a1c6bea2",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "cardinsurancecoverage"
+      },
+      "properties": []
+    },
+    "card": {
+      "componentKey": "077af1d2c41c8eff438a82cd65545d6c02b03042",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "card"
+      },
+      "properties": []
+    },
+    "tag": {
+      "componentKey": "940898c8325eb5e3737f8a76a8a57d03f7d7f243",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "tag"
       },
       "properties": []
     }
