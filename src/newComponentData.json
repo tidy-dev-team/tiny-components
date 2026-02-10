@@ -1,0 +1,1704 @@
+{
+  "$schema": "https://tidy-ds.dev/schemas/component-data/v1.json",
+  "version": "1.0.0",
+  "generatedAt": "2026-02-10T00:00:00.000Z",
+  "source": {
+    "fileKey": "7LWL1TZvifdDf8Oz2AH1tZ",
+    "fileName": "AI-Demo-design"
+  },
+  "components": [
+    {
+      "name": "navigation-panel",
+      "key": "26a68bc8e9011740083efe8216701290e7cefe87",
+      "type": "component",
+      "id": "55:4097",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "navigation-panel",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "account-deatils",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "wrapper",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "avatar",
+                    "type": "container",
+                    "figmaType": "FRAME",
+                    "children": [
+                      {
+                        "name": "DL",
+                        "type": "text",
+                        "figmaType": "TEXT"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "content",
+                    "type": "container",
+                    "figmaType": "FRAME",
+                    "children": [
+                      {
+                        "name": "user-name",
+                        "type": "container",
+                        "figmaType": "FRAME",
+                        "children": [
+                          {
+                            "name": "David Levi",
+                            "type": "text",
+                            "figmaType": "TEXT"
+                          },
+                          {
+                            "name": "edit",
+                            "type": "instance",
+                            "figmaType": "INSTANCE"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Portfolio ID: 20144874",
+                        "type": "text",
+                        "figmaType": "TEXT"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "selector",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "list",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "list-item",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 12,
+        "padding": {
+          "top": 16,
+          "right": 16,
+          "bottom": 16,
+          "left": 16
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 311,
+        "height": 1125,
+        "cornerRadius": 0,
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "search-bar",
+      "key": "3f706a2eb3c460efdffbf7f9b637aa61b56866ae",
+      "type": "componentSet",
+      "id": "17:814",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "size=s, type=empty, state=idle",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "l-content",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "ai_20px",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              },
+              {
+                "name": "Ask me anything...",
+                "type": "text",
+                "figmaType": "TEXT"
+              }
+            ]
+          },
+          {
+            "name": "chat-button-icon",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "special-arrow-24px",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "size",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "s",
+          "options": [
+            "s"
+          ]
+        },
+        {
+          "name": "type",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "empty",
+          "options": [
+            "empty",
+            "filled"
+          ]
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "idle",
+          "options": [
+            "idle",
+            "focused",
+            "disabled"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 16,
+        "padding": {
+          "top": 0,
+          "right": 8,
+          "bottom": 0,
+          "left": 16
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 740,
+        "height": 46,
+        "cornerRadius": 99,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FFFFFF"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#ECECE9"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "list-item",
+      "key": "440d5d0be81898c0ef0a004364822043534a82af",
+      "type": "componentSet",
+      "id": "17:1272",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "state=idle",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "badge- avatar",
+            "type": "instance",
+            "figmaType": "INSTANCE"
+          },
+          {
+            "name": "left-content",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "List item",
+                "type": "text",
+                "figmaType": "TEXT"
+              },
+              {
+                "name": "badge-num",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          },
+          {
+            "name": "chevron",
+            "type": "instance",
+            "figmaType": "INSTANCE"
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "state",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "idle",
+          "options": [
+            "idle",
+            "hover",
+            "selected"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 12,
+        "padding": {
+          "top": 0,
+          "right": 12,
+          "bottom": 0,
+          "left": 12
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 268.008,
+        "height": 56.001,
+        "cornerRadius": 10,
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "badge-num",
+      "key": "443bc5dd8f10da3ddc8cf4510113d1a2840a10e7",
+      "type": "component",
+      "id": "17:1915",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "badge-num",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "3",
+            "type": "text",
+            "figmaType": "TEXT"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 0,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 18,
+        "height": 18,
+        "cornerRadius": 13981000,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FB2C36"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "badge- avatar",
+      "key": "98555a99f983582e1dd31a39405cce68be26f855",
+      "type": "componentSet",
+      "id": "18:616",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "fill=yes",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "home",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "ic",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          },
+          {
+            "name": "Text",
+            "type": "container",
+            "figmaType": "ELLIPSE"
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "fill",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "yes",
+          "options": [
+            "yes",
+            "no"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 0,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 32,
+        "height": 32,
+        "cornerRadius": 8,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FFFFFF"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "button",
+      "key": "10878c5f0cbad64343aa3724080e4b537ab9da39",
+      "type": "componentSet",
+      "id": "18:1539",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "state=idle",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "wallet",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "ic",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          },
+          {
+            "name": "label",
+            "type": "text",
+            "figmaType": "TEXT"
+          },
+          {
+            "name": "wallet",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "ic",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "state",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "idle",
+          "options": [
+            "idle",
+            "hover",
+            "pressed",
+            "focus",
+            "disabled"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 8,
+        "padding": {
+          "top": 0,
+          "right": 20,
+          "bottom": 0,
+          "left": 20
+        },
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "FIXED",
+        "width": 127,
+        "height": 40,
+        "minWidth": 80,
+        "minHeight": 40,
+        "maxHeight": 40,
+        "cornerRadius": 6,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#171717"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "text-button",
+      "key": "fc441c1bfa1176142ac845b33be6882244612c29",
+      "type": "componentSet",
+      "id": "18:1333",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "state=idle",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "Button",
+            "type": "text",
+            "figmaType": "TEXT"
+          },
+          {
+            "name": "chevron",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "Vector",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "state",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "idle",
+          "options": [
+            "idle",
+            "hover",
+            "pressed",
+            "focus",
+            "disabled"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 2,
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "HUG",
+        "width": 51,
+        "height": 14,
+        "cornerRadius": 0,
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "button-icon",
+      "key": "3f69096f6487d5cd58256ef8d8876f263b5b5cfa",
+      "type": "componentSet",
+      "id": "21:5481",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "state=idle",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "wallet",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "ic",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "state",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "idle",
+          "options": [
+            "idle",
+            "hover",
+            "pressed",
+            "foucs",
+            "disabled"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 0,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 24,
+        "height": 24,
+        "minWidth": 24,
+        "minHeight": 24,
+        "maxWidth": 24,
+        "maxHeight": 24,
+        "cornerRadius": 99,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#F9F8F7"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "Trend-badge",
+      "key": "cf931cb0f8802947893743a347b5f624e9541eed",
+      "type": "component",
+      "id": "18:1363",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "Trend-badge",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "+12.4%",
+            "type": "text",
+            "figmaType": "TEXT"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 0,
+        "padding": {
+          "top": 5,
+          "right": 6,
+          "bottom": 5,
+          "left": 6
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "width": 54,
+        "height": 25,
+        "cornerRadius": 13981000,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#DFF1CC"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "categori_icon",
+      "key": "bd311d106c6ab1645f831792dcde9971b1e7d980",
+      "type": "component",
+      "id": "18:1292",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "categori_icon",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "wallet",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "ic",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 0,
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 32,
+        "height": 32,
+        "cornerRadius": 8,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#D5EFE3"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "tag",
+      "key": "940898c8325eb5e3737f8a76a8a57d03f7d7f243",
+      "type": "component",
+      "id": "18:1154",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "tag",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "switch",
+            "type": "instance",
+            "figmaType": "INSTANCE",
+            "children": [
+              {
+                "name": "Vector",
+                "type": "vector",
+                "figmaType": "VECTOR"
+              }
+            ]
+          },
+          {
+            "name": "Change pension plans",
+            "type": "text",
+            "figmaType": "TEXT"
+          },
+          {
+            "name": "chevron",
+            "type": "instance",
+            "figmaType": "INSTANCE"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 6,
+        "padding": {
+          "top": 8,
+          "right": 12,
+          "bottom": 8,
+          "left": 10
+        },
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "HUG",
+        "width": 170,
+        "height": 32,
+        "cornerRadius": 100,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#ECECE9"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "divider",
+      "key": "cbf0d77cb2a491db7cb3610bbf2aa5d12b563109",
+      "type": "component",
+      "id": "17:1506",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "divider",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "divider",
+            "type": "vector",
+            "figmaType": "LINE"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 0,
+        "padding": {
+          "top": 6,
+          "right": 10,
+          "bottom": 6,
+          "left": 10
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "width": 288.008,
+        "height": 12,
+        "cornerRadius": 0,
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "summary-item",
+      "key": "2e9b82ce4754a8954426943a55bfa7ff6ed4052a",
+      "type": "component",
+      "id": "18:1404",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "summary-item",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "title-position",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "Last Deposit",
+                "type": "text",
+                "figmaType": "TEXT"
+              }
+            ]
+          },
+          {
+            "name": "kpi",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "$4,200",
+                "type": "text",
+                "figmaType": "TEXT"
+              },
+              {
+                "name": "November 2024",
+                "type": "text",
+                "figmaType": "TEXT"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 0,
+        "padding": {
+          "top": 16,
+          "right": 8,
+          "bottom": 16,
+          "left": 8
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "width": 349,
+        "height": 75,
+        "cornerRadius": 0,
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#F2F2F2"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": ".legend",
+      "key": "legend-19-708",
+      "type": "component",
+      "id": "19:708",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": ".legend",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "l-content",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "dot",
+                "type": "vector",
+                "figmaType": "RECTANGLE"
+              },
+              {
+                "name": "Last Deposit",
+                "type": "text",
+                "figmaType": "TEXT"
+              }
+            ]
+          },
+          {
+            "name": "r- content",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "$124,850",
+                "type": "text",
+                "figmaType": "TEXT"
+              },
+              {
+                "name": "percentage-position",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "49.4%",
+                    "type": "text",
+                    "figmaType": "TEXT"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 6,
+        "padding": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 6
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "width": 151,
+        "height": 45,
+        "cornerRadius": 0,
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "card-kpi",
+      "key": "077af1d2c41c8eff438a82cd65545d6c02b03042",
+      "type": "component",
+      "id": "19:396",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "card-kpi",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "header",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "title",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "categori_icon",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  },
+                  {
+                    "name": "Pension Portfolio",
+                    "type": "text",
+                    "figmaType": "TEXT"
+                  }
+                ]
+              },
+              {
+                "name": "text-button",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          },
+          {
+            "name": "content-wapper",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "content",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "Total Balance",
+                    "type": "text",
+                    "figmaType": "TEXT"
+                  },
+                  {
+                    "name": "kpi",
+                    "type": "container",
+                    "figmaType": "FRAME",
+                    "children": [
+                      {
+                        "name": "$847,320",
+                        "type": "text",
+                        "figmaType": "TEXT"
+                      },
+                      {
+                        "name": "badge position",
+                        "type": "container",
+                        "figmaType": "FRAME",
+                        "children": [
+                          {
+                            "name": "Trend-badge",
+                            "type": "instance",
+                            "figmaType": "INSTANCE"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "slot",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 44,
+        "padding": {
+          "top": 24,
+          "right": 32,
+          "bottom": 24,
+          "left": 32
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "width": 397,
+        "height": 560,
+        "cornerRadius": 16,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FFFFFF"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "insight-banner",
+      "key": "426b09b0dee8a3d4fca126382e01856278774602",
+      "type": "component",
+      "id": "19:316",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "insight-banner",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "Background",
+            "type": "vector",
+            "figmaType": "VECTOR"
+          },
+          {
+            "name": "Your management fees are...",
+            "type": "text",
+            "figmaType": "TEXT"
+          },
+          {
+            "name": "button",
+            "type": "instance",
+            "figmaType": "INSTANCE"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 24,
+        "padding": {
+          "top": 20,
+          "right": 20,
+          "bottom": 20,
+          "left": 20
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "HUG",
+        "width": 349,
+        "height": 112,
+        "cornerRadius": 10,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FBFAFD"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#EEE9F6"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "slot",
+      "key": "d4f54fd33260297e644efcff652cac768badaa71",
+      "type": "component",
+      "id": "19:358",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "slot",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "background",
+            "type": "vector",
+            "figmaType": "RECTANGLE"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 252,
+        "height": 251,
+        "cornerRadius": 0,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#EAE9E9"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "card-insurance-coverage",
+      "key": "bc161bddce40f95821730f6331466398a1c6bea2",
+      "type": "component",
+      "id": "23:681",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "card-insurance-coverage",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "header",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "title",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "categori_icon",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  },
+                  {
+                    "name": "Insurance Coverage",
+                    "type": "text",
+                    "figmaType": "TEXT"
+                  }
+                ]
+              },
+              {
+                "name": "tabs",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "avatar-user",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  },
+                  {
+                    "name": "button-icon",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "cards + cta",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "cards",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "insurace-card",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  }
+                ]
+              },
+              {
+                "name": "btn-position",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "text-button",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 24,
+        "padding": {
+          "top": 24,
+          "right": 32,
+          "bottom": 24,
+          "left": 32
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 875,
+        "height": 292,
+        "cornerRadius": 16,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FFFFFF"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "insurace-card",
+      "key": "0d6b21f11469a797ca038f4b3fe1468fa6f5014b",
+      "type": "component",
+      "id": "21:4652",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "insurace-card",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "header",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "title",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "wallet",
+                    "type": "instance",
+                    "figmaType": "INSTANCE"
+                  },
+                  {
+                    "name": "Life",
+                    "type": "text",
+                    "figmaType": "TEXT"
+                  }
+                ]
+              },
+              {
+                "name": ".card-tag",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          },
+          {
+            "name": "kpi-row",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": ".card-kpi",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              },
+              {
+                "name": ".card-kpi",
+                "type": "instance",
+                "figmaType": "INSTANCE"
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 0,
+        "padding": {
+          "top": 16,
+          "right": 16,
+          "bottom": 16,
+          "left": 16
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 270.99,
+        "height": 148,
+        "cornerRadius": 12,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#F5F5F4"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 0.833,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": ".card-tag",
+      "key": "card-tag-21-4670",
+      "type": "component",
+      "id": "21:4670",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": ".card-tag",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "Harel",
+            "type": "text",
+            "figmaType": "TEXT"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "CENTER",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 0,
+        "padding": {
+          "top": 4,
+          "right": 8,
+          "bottom": 4,
+          "left": 8
+        },
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "HUG",
+        "width": 45,
+        "height": 22,
+        "cornerRadius": 100,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FCFCFC"
+            }
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": ".card-kpi",
+      "key": "card-kpi-21-4679",
+      "type": "component",
+      "id": "21:4679",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": ".card-kpi",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "$1,200,000",
+            "type": "text",
+            "figmaType": "TEXT"
+          },
+          {
+            "name": "Text",
+            "type": "text",
+            "figmaType": "TEXT"
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 4,
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "HUG",
+        "width": 92,
+        "height": 41,
+        "cornerRadius": 0,
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "avatar-member",
+      "key": "13b10d1162d332d8476de3defac9cc1ea44c7ee3",
+      "type": "componentSet",
+      "id": "28:1192",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "member=1",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "avatar-image",
+            "type": "container",
+            "figmaType": "FRAME"
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "member",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "1",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 32,
+        "height": 32,
+        "cornerRadius": 999,
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#F3F3F1"
+            }
+          }
+        ],
+        "strokeWeight": 1,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "avatar-user",
+      "key": "bfac9058fbfd49c758d1bb9074ff2e4b6d486a46",
+      "type": "componentSet",
+      "id": "30:1270",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "active=yes",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "avatar-member",
+            "type": "instance",
+            "figmaType": "INSTANCE"
+          },
+          {
+            "name": "David",
+            "type": "text",
+            "figmaType": "TEXT"
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "active",
+          "type": "enum",
+          "figmaType": "VARIANT",
+          "default": "yes",
+          "options": [
+            "yes",
+            "no"
+          ]
+        }
+      ],
+      "defaultStyles": {
+        "layoutMode": "HORIZONTAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "CENTER",
+        "itemSpacing": 3,
+        "padding": {
+          "top": 0,
+          "right": 8,
+          "bottom": 0,
+          "left": 1
+        },
+        "layoutSizingHorizontal": "HUG",
+        "layoutSizingVertical": "HUG",
+        "width": 77,
+        "height": 32,
+        "cornerRadius": 100,
+        "fills": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#FAF9F5"
+            }
+          }
+        ],
+        "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    }
+  ]
+}
