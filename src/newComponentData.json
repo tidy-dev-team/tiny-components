@@ -163,30 +163,21 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "s",
-          "options": [
-            "s"
-          ]
+          "options": ["s"]
         },
         {
           "name": "type",
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "empty",
-          "options": [
-            "empty",
-            "filled"
-          ]
+          "options": ["empty", "filled"]
         },
         {
           "name": "state",
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "idle",
-          "options": [
-            "idle",
-            "focused",
-            "disabled"
-          ]
+          "options": ["idle", "focused", "disabled"]
         }
       ],
       "defaultStyles": {
@@ -276,11 +267,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "idle",
-          "options": [
-            "idle",
-            "hover",
-            "selected"
-          ]
+          "options": ["idle", "hover", "selected"]
         }
       ],
       "defaultStyles": {
@@ -384,10 +371,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "yes",
-          "options": [
-            "yes",
-            "no"
-          ]
+          "options": ["yes", "no"]
         }
       ],
       "defaultStyles": {
@@ -473,13 +457,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "idle",
-          "options": [
-            "idle",
-            "hover",
-            "pressed",
-            "focus",
-            "disabled"
-          ]
+          "options": ["idle", "hover", "pressed", "focus", "disabled"]
         }
       ],
       "defaultStyles": {
@@ -552,13 +530,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "idle",
-          "options": [
-            "idle",
-            "hover",
-            "pressed",
-            "focus",
-            "disabled"
-          ]
+          "options": ["idle", "hover", "pressed", "focus", "disabled"]
         }
       ],
       "defaultStyles": {
@@ -607,13 +579,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "idle",
-          "options": [
-            "idle",
-            "hover",
-            "pressed",
-            "foucs",
-            "disabled"
-          ]
+          "options": ["idle", "hover", "pressed", "foucs", "disabled"]
         }
       ],
       "defaultStyles": {
@@ -1606,12 +1572,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "1",
-          "options": [
-            "1",
-            "2",
-            "3",
-            "4"
-          ]
+          "options": ["1", "2", "3", "4"]
         }
       ],
       "defaultStyles": {
@@ -1664,10 +1625,7 @@
           "type": "enum",
           "figmaType": "VARIANT",
           "default": "yes",
-          "options": [
-            "yes",
-            "no"
-          ]
+          "options": ["yes", "no"]
         }
       ],
       "defaultStyles": {
@@ -1697,6 +1655,143 @@
           }
         ],
         "strokeWeight": 0,
+        "strokeAlign": "INSIDE"
+      }
+    },
+    {
+      "name": "side-banner",
+      "key": "d521d4fee01b7734ffa94436c74b6f51d2fad42c",
+      "type": "component",
+      "id": "110:1184",
+      "description": "",
+      "path": [],
+      "anatomy": {
+        "name": "side banner",
+        "type": "root",
+        "figmaType": "COMPONENT",
+        "children": [
+          {
+            "name": "shadow",
+            "type": "container",
+            "figmaType": "FRAME"
+          },
+          {
+            "name": "wrapper",
+            "type": "container",
+            "figmaType": "FRAME",
+            "children": [
+              {
+                "name": "content",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "header",
+                    "type": "container",
+                    "figmaType": "FRAME",
+                    "children": [
+                      {
+                        "name": "tag",
+                        "type": "container",
+                        "figmaType": "FRAME",
+                        "children": [
+                          {
+                            "name": "2025  Wrapped",
+                            "type": "text",
+                            "figmaType": "TEXT"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "button",
+                        "type": "container",
+                        "figmaType": "FRAME",
+                        "children": [
+                          {
+                            "name": "arrow-up-right",
+                            "type": "instance",
+                            "figmaType": "INSTANCE"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "kpi",
+                    "type": "container",
+                    "figmaType": "FRAME",
+                    "children": [
+                      {
+                        "name": "Total Contributions",
+                        "type": "text",
+                        "figmaType": "TEXT"
+                      },
+                      {
+                        "name": "$56,200",
+                        "type": "text",
+                        "figmaType": "TEXT"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "text-box",
+                "type": "container",
+                "figmaType": "FRAME",
+                "children": [
+                  {
+                    "name": "tag",
+                    "type": "container",
+                    "figmaType": "FRAME",
+                    "children": [
+                      {
+                        "name": "🏆  Top Achievement",
+                        "type": "text",
+                        "figmaType": "TEXT"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Maximum pension contributions reached",
+                    "type": "text",
+                    "figmaType": "TEXT"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "props": [],
+      "defaultStyles": {
+        "layoutMode": "VERTICAL",
+        "primaryAxisAlignItems": "MIN",
+        "counterAxisAlignItems": "MIN",
+        "itemSpacing": 24,
+        "padding": {
+          "top": 24,
+          "right": 20,
+          "bottom": 24,
+          "left": 20
+        },
+        "layoutSizingHorizontal": "FIXED",
+        "layoutSizingVertical": "FIXED",
+        "width": 294,
+        "height": 307,
+        "cornerRadius": 16,
+        "fills": [],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "opacity": 1,
+            "visible": true,
+            "color": {
+              "value": "#E8E8E8"
+            }
+          }
+        ],
+        "strokeWeight": 1,
         "strokeAlign": "INSIDE"
       }
     }

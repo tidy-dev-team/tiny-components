@@ -34,6 +34,14 @@
       },
       "properties": []
     },
+    "banner": {
+      "componentKey": "d521d4fee01b7734ffa94436c74b6f51d2fad42c",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "banner"
+      },
+      "properties": []
+    },
     "tag": {
       "componentKey": "940898c8325eb5e3737f8a76a8a57d03f7d7f243",
       "frameMatcher": {
