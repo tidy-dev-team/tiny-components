@@ -237,37 +237,51 @@ function updateContainerWrappersToHug(instances: InstanceNode[]) {
   const processed = new Set<string>();
 
   for (const instance of instances) {
-    const parent = instance.parent;
-    if (parent === null || parent.type !== "FRAME") {
-      continue;
-    }
-
-    if (processed.has(parent.id)) {
-      continue;
-    }
-
-    if (parent.name.toLowerCase() !== "container") {
-      continue;
-    }
-
-    // Verify that all direct children are component instances
-    const allChildrenAreInstances = parent.children.every(
-      (child) => child.type === "INSTANCE"
-    );
-    if (!allChildrenAreInstances) {
-      continue;
-    }
-
-    // Set sizing to HUG on both axes (requires auto-layout)
-    try {
-      if (parent.layoutMode !== "NONE") {
-        parent.layoutSizingHorizontal = "HUG";
-        parent.layoutSizingVertical = "HUG";
+    // Walk up the entire ancestor chain from each replaced instance
+    let current: BaseNode | null = instance.parent;
+    while (current !== null) {
+      if (current.type !== "FRAME") {
+        current = current.parent;
+        continue;
       }
-    } catch {
-      // May fail if the frame doesn't support these properties
-    }
 
-    processed.add(parent.id);
+      if (processed.has(current.id)) {
+        current = current.parent;
+        continue;
+      }
+
+      const name = current.name.toLowerCase();
+      if (name !== "container" && name !== "main content") {
+        current = current.parent;
+        continue;
+      }
+
+      // Set sizing to HUG on both axes, enabling auto-layout if needed
+      try {
+        if (current.layoutMode === "NONE") {
+          current.layoutMode = "VERTICAL";
+        }
+        if (current.itemSpacing === 0) {
+          current.itemSpacing = 16;
+        }
+        current.layoutSizingHorizontal = "HUG";
+        current.layoutSizingVertical = "HUG";
+
+        // Reset children's layout properties that conflict with HUG parent
+        for (const child of current.children) {
+          if ("layoutAlign" in child) {
+            child.layoutAlign = "INHERIT";
+          }
+          if ("layoutGrow" in child) {
+            child.layoutGrow = 0;
+          }
+        }
+      } catch {
+        // May fail if the frame doesn't support these properties
+      }
+
+      processed.add(current.id);
+      current = current.parent;
+    }
   }
 }
