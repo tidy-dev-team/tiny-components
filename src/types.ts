@@ -55,12 +55,6 @@ export interface ComponentMapping {
   componentKey: string;
   frameMatcher: FrameMatcher;
   properties: PropertyMappingRule[];
-  /** For tab-bar components: key for the individual tab item component */
-  tabItemComponentKey?: string;
-  /** For tab-bar components: matcher to find the tab list container */
-  tabListMatcher?: FrameMatcher;
-  /** For tab-bar components: matcher to find individual tab items within the list */
-  tabItemMatcher?: FrameMatcher;
 }
 
 export interface FrameMatcher {
@@ -91,14 +85,6 @@ export interface ExtractedContent {
   hasRightIcon: boolean;
   leftIconKey: string | null;
   rightIconKey: string | null;
-  /** For tab-bar components: array of tab item labels extracted from the source */
-  tabItems?: ExtractedTabItem[];
-}
-
-export interface ExtractedTabItem {
-  label: string;
-  hasIcon: boolean;
-  iconKey: string | null;
 }
 
 // ============================================

@@ -2,56 +2,13 @@
   "$schema": "https://tidy-ds.dev/schemas/property-mappings/v1.json",
   "version": "1.0.0",
   "mappings": {
-    "button": {
-      "componentKey": "1a45acec266bbb1bd1338744453eb9e33aa2af53",
+    "sidebar": {
+      "componentKey": "26a68bc8e9011740083efe8216701290e7cefe87",
       "frameMatcher": {
         "type": "nameContains",
-        "value": "button"
+        "value": "sidebar"
       },
-      "properties": [
-        {
-          "target": "✏️ label#259:52",
-          "source": { "type": "text" }
-        },
-        {
-          "target": "icon L#259:104",
-          "source": { "type": "hasLeftIcon" }
-        },
-        {
-          "target": "icon R#259:78",
-          "source": { "type": "hasRightIcon" }
-        },
-        {
-          "target": "🔁 icon L#102:0",
-          "source": { "type": "leftIconInstance" }
-        },
-        {
-          "target": "🔁 icon R#102:76",
-          "source": { "type": "rightIconInstance" }
-        }
-      ]
-    },
-    "tabBar": {
-      "componentKey": "ad5a3f707653e91485fee7dea28e908ef701a8b9",
-      "tabItemComponentKey": "8980d2beaaabc9c4afaca42bc99a00b8631bce20",
-      "frameMatcher": {
-        "type": "nameContains",
-        "value": "tab"
-      },
-      "tabListMatcher": {
-        "type": "nameContains",
-        "value": "tab list"
-      },
-      "tabItemMatcher": {
-        "type": "nameContains",
-        "value": "tab"
-      },
-      "properties": [
-        {
-          "target": "✏️ tab title#192:69",
-          "source": { "type": "text" }
-        }
-      ]
+      "properties": []
     }
   }
 }

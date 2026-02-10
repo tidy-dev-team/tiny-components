@@ -1,24 +1,10 @@
 import type { ExtractedContent } from "../types";
 
-import type { ComponentMapping, FrameMatcher, ExtractedTabItem } from "../types";
-
 /**
  * Extracts content from a frame for property transfer to a DS component.
  * Identifies text content and icon positions (left/right relative to text).
  */
-export function extractFrameContent(frame: FrameNode, mapping?: ComponentMapping): ExtractedContent {
-  // If this is a tab-bar mapping, extract tab items
-  if (mapping?.tabListMatcher && mapping?.tabItemMatcher) {
-    const tabItems = extractTabItems(frame, mapping.tabListMatcher, mapping.tabItemMatcher);
-    return {
-      text: null,
-      hasLeftIcon: false,
-      hasRightIcon: false,
-      leftIconKey: null,
-      rightIconKey: null,
-      tabItems,
-    };
-  }
+export function extractFrameContent(frame: FrameNode): ExtractedContent {
   const textNodes = findAllTextNodes(frame);
   const visualNodes = findNonTextVisualNodes(frame);
 
@@ -55,8 +41,10 @@ export function extractFrameContent(frame: FrameNode, mapping?: ComponentMapping
   }
 
   // Pick the closest icon to the text on each side
-  const leftIcon = leftIcons.length > 0 ? findClosestToX(leftIcons, textCenterX) : null;
-  const rightIcon = rightIcons.length > 0 ? findClosestToX(rightIcons, textCenterX) : null;
+  const leftIcon =
+    leftIcons.length > 0 ? findClosestToX(leftIcons, textCenterX) : null;
+  const rightIcon =
+    rightIcons.length > 0 ? findClosestToX(rightIcons, textCenterX) : null;
 
   return {
     text: primaryText.characters,
@@ -162,7 +150,10 @@ function findPrimaryText(textNodes: TextNode[]): TextNode | null {
     if (currentSize > bestSize) {
       return current;
     }
-    if (currentSize === bestSize && current.characters.length > best.characters.length) {
+    if (
+      currentSize === bestSize &&
+      current.characters.length > best.characters.length
+    ) {
       return current;
     }
     return best;
@@ -211,113 +202,4 @@ function getInstanceKey(node: SceneNode): string | null {
     return node.mainComponent.key;
   }
   return null;
-}
-
-/**
- * Extracts tab items from a frame containing a Tab List with Tab children.
- */
-function extractTabItems(
-  frame: FrameNode,
-  tabListMatcher: FrameMatcher,
-  tabItemMatcher: FrameMatcher
-): ExtractedTabItem[] {
-  const tabItems: ExtractedTabItem[] = [];
-
-  // Find the Tab List container within the frame
-  const tabList = findChildByMatcher(frame, tabListMatcher);
-  if (!tabList || !("children" in tabList)) {
-    // If no Tab List found, try to find tabs directly in the frame
-    const directTabs = findChildrenByMatcher(frame, tabItemMatcher);
-    for (const tab of directTabs) {
-      tabItems.push(extractSingleTabItem(tab));
-    }
-    return tabItems;
-  }
-
-  // Find all Tab items within the Tab List
-  const tabs = findChildrenByMatcher(tabList as FrameNode, tabItemMatcher);
-  for (const tab of tabs) {
-    tabItems.push(extractSingleTabItem(tab));
-  }
-
-  return tabItems;
-}
-
-/**
- * Extracts content from a single tab item frame.
- */
-function extractSingleTabItem(node: SceneNode): ExtractedTabItem {
-  const textNodes = findAllTextNodes(node);
-  const primaryText = findPrimaryText(textNodes);
-  const visualNodes = findNonTextVisualNodes(node);
-
-  // Find icon (first visual node that's likely an icon)
-  const iconNode = visualNodes.length > 0 ? visualNodes[0] : null;
-
-  return {
-    label: primaryText?.characters ?? "",
-    hasIcon: iconNode !== null,
-    iconKey: iconNode ? getInstanceKey(iconNode) : null,
-  };
-}
-
-/**
- * Finds a direct child that matches the given matcher.
- */
-function findChildByMatcher(parent: FrameNode, matcher: FrameMatcher): SceneNode | null {
-  const matchValue = matcher.value.toLowerCase();
-
-  for (const child of parent.children) {
-    const childName = child.name.toLowerCase();
-    let matches = false;
-
-    switch (matcher.type) {
-      case "nameContains":
-        matches = childName.includes(matchValue);
-        break;
-      case "nameEquals":
-        matches = childName === matchValue;
-        break;
-      case "nameStartsWith":
-        matches = childName.startsWith(matchValue);
-        break;
-    }
-
-    if (matches) {
-      return child;
-    }
-  }
-
-  return null;
-}
-
-/**
- * Finds all direct children that match the given matcher.
- */
-function findChildrenByMatcher(parent: FrameNode, matcher: FrameMatcher): SceneNode[] {
-  const matchValue = matcher.value.toLowerCase();
-  const matches: SceneNode[] = [];
-
-  for (const child of parent.children) {
-    const childName = child.name.toLowerCase();
-    let isMatch = false;
-
-    switch (matcher.type) {
-      case "nameContains":
-        isMatch = childName.includes(matchValue);
-        break;
-      case "nameEquals":
-        isMatch = childName === matchValue;
-        break;
-      case "nameStartsWith":
-        isMatch = childName.startsWith(matchValue);
-        break;
-    }
-
-    if (isMatch) {
-      matches.push(child);
-    }
-  }
-
-  return matches;
 }

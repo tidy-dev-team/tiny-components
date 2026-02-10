@@ -1,5 +1,5 @@
 // Component data wrapper - imports from JSON files
-import componentDataJson from "./componentData.json";
+import componentDataJson from "./newComponentData.json";
 import propertyMappingsJson from "./propertyMappings.json";
 import type {
   ComponentDataFile,
@@ -24,7 +24,10 @@ export const componentsByName = new Map<string, ComponentDefinition>(
 );
 
 // Get all mappings as an array for iteration
-export function getAllMappings(): Array<{ id: string; mapping: ComponentMapping }> {
+export function getAllMappings(): Array<{
+  id: string;
+  mapping: ComponentMapping;
+}> {
   return Object.entries(propertyMappings.mappings).map(([id, mapping]) => ({
     id,
     mapping,
@@ -63,12 +66,16 @@ function matchesFrame(normalizedName: string, matcher: FrameMatcher): boolean {
 }
 
 // Get component definition by key
-export function getComponentByKey(key: string): ComponentDefinition | undefined {
+export function getComponentByKey(
+  key: string
+): ComponentDefinition | undefined {
   return componentsByKey.get(key);
 }
 
 // Get component definition by name
-export function getComponentByName(name: string): ComponentDefinition | undefined {
+export function getComponentByName(
+  name: string
+): ComponentDefinition | undefined {
   return componentsByName.get(name.toLowerCase());
 }
 
