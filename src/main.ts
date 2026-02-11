@@ -169,7 +169,21 @@ async function replaceFrameWithComponent(
   // 5. Apply extracted content to the instance
   await applyProperties(instance, content, mapping);
 
-  // 6. Remove the original frame
+  // 6. Apply instance sizing overrides if specified
+  if (mapping.instanceSizing) {
+    try {
+      if (mapping.instanceSizing.horizontal) {
+        instance.layoutSizingHorizontal = mapping.instanceSizing.horizontal;
+      }
+      if (mapping.instanceSizing.vertical) {
+        instance.layoutSizingVertical = mapping.instanceSizing.vertical;
+      }
+    } catch {
+      // May fail depending on parent layout
+    }
+  }
+
+  // 7. Remove the original frame
   frame.remove();
 
   return instance;

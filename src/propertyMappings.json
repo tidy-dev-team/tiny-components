@@ -24,7 +24,10 @@
         "type": "nameFuzzy",
         "value": "cardinsurancecoverage"
       },
-      "properties": []
+      "properties": [],
+      "instanceSizing": {
+        "vertical": "FILL"
+      }
     },
     "card": {
       "componentKey": "077af1d2c41c8eff438a82cd65545d6c02b03042",

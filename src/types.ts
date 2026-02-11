@@ -55,6 +55,10 @@ export interface ComponentMapping {
   componentKey: string;
   frameMatcher: FrameMatcher;
   properties: PropertyMappingRule[];
+  instanceSizing?: {
+    horizontal?: "HUG" | "FILL" | "FIXED";
+    vertical?: "HUG" | "FILL" | "FIXED";
+  };
 }
 
 export interface FrameMatcher {
