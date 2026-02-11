@@ -1,5 +1,9 @@
 import { on, showUI } from "@create-figma-plugin/utilities";
-import { findMappingForFrame, getAllMappings } from "./componentData";
+import {
+  findMappingForFrame,
+  getAllMappings,
+  getComponentByKey,
+} from "./componentData";
 import { extractFrameContent } from "./extraction/frameAnalyzer";
 import { applyProperties } from "./replacement/propertyApplicator";
 import type { ComponentMapping } from "./types";
@@ -70,6 +74,7 @@ async function handleReplaceComponents() {
       matchResult.mapping
     );
     if (replacement === null) {
+      console.warn(`Skipped frame "${frame.name}" — component import failed`);
       skipped += 1;
       continue;
     }
@@ -191,6 +196,7 @@ async function replaceFrameWithComponent(
 
 /**
  * Imports a component by key, caching the result.
+ * Falls back to finding the component by ID in the current document.
  */
 async function getComponentNodeByKey(
   key: string
@@ -199,24 +205,50 @@ async function getComponentNodeByKey(
     return componentCache.get(key)!;
   }
 
-  // Try importing as component set first (e.g., "Buttons" with variants)
+  // Try importing as regular component first
+  try {
+    const component = await figma.importComponentByKeyAsync(key);
+    componentCache.set(key, component);
+    return component;
+  } catch {
+    // Not a regular component, try as component set
+  }
+
+  // Try importing as component set (e.g., components with variants)
   try {
     const componentSet = await figma.importComponentSetByKeyAsync(key);
     componentCache.set(key, componentSet);
     return componentSet;
   } catch {
-    // Not a component set, try as regular component
+    // Import by key failed
   }
 
-  // Fallback to regular component
-  try {
-    const component = await figma.importComponentByKeyAsync(key);
-    componentCache.set(key, component);
-    return component;
-  } catch (error) {
-    console.error(`Failed to import component with key ${key}`, error);
-    return null;
+  // Fallback: find component by its Figma node ID from our component data
+  const componentDef = getComponentByKey(key);
+  if (componentDef) {
+    try {
+      const node = figma.getNodeById(componentDef.id);
+      if (
+        node &&
+        (node.type === "COMPONENT" || node.type === "COMPONENT_SET")
+      ) {
+        componentCache.set(key, node as ComponentNode | ComponentSetNode);
+        return node as ComponentNode | ComponentSetNode;
+      }
+    } catch {
+      // Node not found in current document
+    }
+    figma.notify(
+      `⚠️ Could not import "${componentDef.name}" — key may be invalid`,
+      { error: true }
+    );
+  } else {
+    figma.notify(`⚠️ Could not import component with key ${key}`, {
+      error: true,
+    });
   }
+
+  return null;
 }
 
 /**
@@ -235,11 +267,6 @@ function applyFrameGeometry(source: FrameNode, target: InstanceNode) {
     target.layoutGrow = source.layoutGrow;
   } catch {
     // Some properties may not be settable depending on parent
-  }
-
-  // Copy rotation if any
-  if (source.rotation !== 0) {
-    target.rotation = source.rotation;
   }
 }
 

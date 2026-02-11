@@ -43,7 +43,10 @@
         "type": "nameFuzzy",
         "value": "banner"
       },
-      "properties": []
+      "properties": [],
+      "instanceSizing": {
+        "vertical": "FILL"
+      }
     },
     "tag": {
       "componentKey": "940898c8325eb5e3737f8a76a8a57d03f7d7f243",
