@@ -9,6 +9,10 @@ import type {
  * Applies extracted content to a DS component instance using property mappings.
  */
 const TAG_COMPONENT_KEY = "940898c8325eb5e3737f8a76a8a57d03f7d7f243";
+const CARD_COMPONENT_KEY = "077af1d2c41c8eff438a82cd65545d6c02b03042";
+const LOCAL_BANNER_CONTENT_KEY = "d251269738d5aebeb3096c4991878e651e14553a";
+const LOCAL_BANNER_CONTENT_GRAPH_KEY =
+  "b0353430cfffe3779de8aecc4c60e5ede867ff3b";
 
 export async function applyProperties(
   instance: InstanceNode,
@@ -57,6 +61,8 @@ export async function applyProperties(
   for (const swap of instanceSwaps) {
     await applyInstanceSwap(instance, swap.target, swap.componentKey);
   }
+
+  await maybeApplyCardSlotSwaps(instance, mapping);
 }
 
 function maybeApplyTagTextProperty(
@@ -103,6 +109,79 @@ function findAvailableTextProperty(
 
   const preferred = textProps.find(([name]) => /text|label/i.test(name));
   return preferred ? preferred[0] : null;
+}
+
+async function maybeApplyCardSlotSwaps(
+  instance: InstanceNode,
+  mapping: ComponentMapping
+): Promise<void> {
+  if (mapping.componentKey !== CARD_COMPONENT_KEY) {
+    return;
+  }
+
+  const slotInstances = findNestedInstancesByName(instance, "slot");
+  const slotInstance = slotInstances[0] ?? null;
+  if (!slotInstance) {
+    return;
+  }
+
+  const parent = instance.parent;
+  if (!parent || !("children" in parent)) {
+    return;
+  }
+
+  const cardSiblings = parent.children.filter(
+    (node): node is InstanceNode =>
+      node.type === "INSTANCE" && node.mainComponent?.key === CARD_COMPONENT_KEY
+  );
+
+  const cardIndex = cardSiblings.indexOf(instance);
+  if (cardIndex === -1) {
+    return;
+  }
+
+  const targetKey =
+    cardIndex === 0
+      ? LOCAL_BANNER_CONTENT_KEY
+      : cardIndex === 1
+      ? LOCAL_BANNER_CONTENT_GRAPH_KEY
+      : null;
+
+  if (!targetKey) {
+    return;
+  }
+
+  try {
+    const targetComponent = await figma.importComponentByKeyAsync(targetKey);
+    slotInstance.swapComponent(targetComponent);
+  } catch (error) {
+    console.error("Failed to swap card slot:", error);
+  }
+}
+
+function findNestedInstancesByName(
+  parent: SceneNode,
+  namePattern: string
+): InstanceNode[] {
+  const lowerPattern = namePattern.toLowerCase();
+  const matches: InstanceNode[] = [];
+
+  if ("children" in parent) {
+    for (const child of parent.children) {
+      if (child.type === "INSTANCE") {
+        const childName = child.name.toLowerCase();
+        if (childName.includes(lowerPattern)) {
+          matches.push(child);
+        }
+      }
+
+      if ("children" in child) {
+        matches.push(...findNestedInstancesByName(child, namePattern));
+      }
+    }
+  }
+
+  return matches;
 }
 
 /**
