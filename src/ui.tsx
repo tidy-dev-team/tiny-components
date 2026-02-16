@@ -50,12 +50,14 @@ function Plugin() {
             </Muted>
           </Text>
           <VerticalSpace space="medium" />
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+          >
             <Button secondary fullWidth onClick={handleFindComponentsClick}>
               find components
             </Button>
             <Button fullWidth onClick={handleReplaceComponentsClick}>
-              replace with components
+              replace from DS
             </Button>
           </div>
           <VerticalSpace space="medium" />

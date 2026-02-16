@@ -8,6 +8,8 @@ import type {
 /**
  * Applies extracted content to a DS component instance using property mappings.
  */
+const TAG_COMPONENT_KEY = "940898c8325eb5e3737f8a76a8a57d03f7d7f243";
+
 export async function applyProperties(
   instance: InstanceNode,
   content: ExtractedContent,
@@ -25,7 +27,10 @@ export async function applyProperties(
     }
 
     // Instance swaps need special handling
-    if (rule.source.type === "leftIconInstance" || rule.source.type === "rightIconInstance") {
+    if (
+      rule.source.type === "leftIconInstance" ||
+      rule.source.type === "rightIconInstance"
+    ) {
       if (typeof value === "string") {
         instanceSwaps.push({ target: rule.target, componentKey: value });
       }
@@ -35,6 +40,8 @@ export async function applyProperties(
     // Text and boolean properties can be set directly
     properties[rule.target] = value;
   }
+
+  maybeApplyTagTextProperty(instance, content, mapping, properties);
 
   // Apply text and boolean properties
   if (Object.keys(properties).length > 0) {
@@ -50,6 +57,52 @@ export async function applyProperties(
   for (const swap of instanceSwaps) {
     await applyInstanceSwap(instance, swap.target, swap.componentKey);
   }
+}
+
+function maybeApplyTagTextProperty(
+  instance: InstanceNode,
+  content: ExtractedContent,
+  mapping: ComponentMapping,
+  properties: Record<string, string | boolean>
+): void {
+  if (mapping.componentKey !== TAG_COMPONENT_KEY) {
+    return;
+  }
+
+  if (content.text === null) {
+    return;
+  }
+
+  const target = findAvailableTextProperty(instance, properties);
+  if (target) {
+    properties[target] = content.text;
+  }
+}
+
+function findAvailableTextProperty(
+  instance: InstanceNode,
+  properties: Record<string, string | boolean>
+): string | null {
+  const componentProperties = instance.componentProperties;
+  if (!componentProperties) {
+    return null;
+  }
+
+  const existing = new Set(Object.keys(properties));
+  const textProps = Object.entries(componentProperties).filter(
+    ([name, prop]) => !existing.has(name) && prop.type === "TEXT"
+  );
+
+  if (textProps.length === 0) {
+    return null;
+  }
+
+  if (textProps.length === 1) {
+    return textProps[0][0];
+  }
+
+  const preferred = textProps.find(([name]) => /text|label/i.test(name));
+  return preferred ? preferred[0] : null;
 }
 
 /**
@@ -118,13 +171,19 @@ async function applyInstanceSwap(
     // and matching by name pattern extracted from the property name
     const instanceNameHint = extractNameHint(targetPropertyName);
     if (instanceNameHint) {
-      const nestedInstance = findNestedInstanceByName(instance, instanceNameHint);
+      const nestedInstance = findNestedInstanceByName(
+        instance,
+        instanceNameHint
+      );
       if (nestedInstance) {
         nestedInstance.swapComponent(newComponent);
       }
     }
   } catch (error) {
-    console.error(`Failed to apply instance swap for ${targetPropertyName}:`, error);
+    console.error(
+      `Failed to apply instance swap for ${targetPropertyName}:`,
+      error
+    );
   }
 }
 
