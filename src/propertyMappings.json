@@ -55,6 +55,22 @@
         "value": "tag"
       },
       "properties": []
+    },
+    "localBannerContent": {
+      "componentKey": "d251269738d5aebeb3096c4991878e651e14553a",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "local-banner- content"
+      },
+      "properties": []
+    },
+    "localBannerContentGraph": {
+      "componentKey": "b0353430cfffe3779de8aecc4c60e5ede867ff3b",
+      "frameMatcher": {
+        "type": "nameFuzzy",
+        "value": "local-banner- content-graph"
+      },
+      "properties": []
     }
   }
 }
