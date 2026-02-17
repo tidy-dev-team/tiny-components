@@ -18,6 +18,8 @@ import {
   MapElementEventHandler,
   REPLACE_COMPONENTS_EVENT,
   ReplaceComponentsEventHandler,
+  MAPPINGS_UPDATED_EVENT,
+  MappingsUpdatedEventHandler,
   SELECTION_CHANGED_EVENT,
   SelectionChangedEventHandler,
   UNMAP_ELEMENT_EVENT,
@@ -38,12 +40,20 @@ export default function () {
     REPLACE_COMPONENTS_EVENT,
     handleReplaceComponents
   );
-  on<GetSelectionEventHandler>(GET_SELECTION_EVENT, handleGetSelection);
+  on<GetSelectionEventHandler>(GET_SELECTION_EVENT, () => {
+    const selection = handleGetSelection();
+    emit<SelectionChangedEventHandler>(SELECTION_CHANGED_EVENT, selection);
+    return selection;
+  });
   on<MapElementEventHandler>(MAP_ELEMENT_EVENT, handleMapElement);
   on<UnmapElementEventHandler>(UNMAP_ELEMENT_EVENT, handleUnmapElement);
   on<GetManualMappingsEventHandler>(
     GET_MANUAL_MAPPINGS_EVENT,
-    handleGetManualMappings
+    () => {
+      const mappings = handleGetManualMappings();
+      emit<MappingsUpdatedEventHandler>(MAPPINGS_UPDATED_EVENT, mappings);
+      return mappings;
+    }
   );
 
   figma.on("selectionchange", () => {
@@ -412,10 +422,18 @@ function handleGetSelection(): SelectionInfo | null {
 
 function handleMapElement(nodeId: string, mappingId: string): void {
   manualMappings.set(nodeId, mappingId);
+  emit<MappingsUpdatedEventHandler>(
+    MAPPINGS_UPDATED_EVENT,
+    handleGetManualMappings()
+  );
 }
 
 function handleUnmapElement(nodeId: string): void {
   manualMappings.delete(nodeId);
+  emit<MappingsUpdatedEventHandler>(
+    MAPPINGS_UPDATED_EVENT,
+    handleGetManualMappings()
+  );
 }
 
 function handleGetManualMappings(): ManualMapping[] {
