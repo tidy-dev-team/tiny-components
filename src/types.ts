@@ -133,6 +133,7 @@ export const UNMAP_ELEMENT_EVENT = "UNMAP_ELEMENT" as const;
 export const GET_MANUAL_MAPPINGS_EVENT = "GET_MANUAL_MAPPINGS" as const;
 export const SELECTION_CHANGED_EVENT = "SELECTION_CHANGED" as const;
 export const MAPPINGS_UPDATED_EVENT = "MAPPINGS_UPDATED" as const;
+export const SELECT_MAPPED_NODE_EVENT = "SELECT_MAPPED_NODE" as const;
 
 export type PluginEvent =
   | typeof FIND_COMPONENTS_EVENT
@@ -142,7 +143,8 @@ export type PluginEvent =
   | typeof UNMAP_ELEMENT_EVENT
   | typeof GET_MANUAL_MAPPINGS_EVENT
   | typeof SELECTION_CHANGED_EVENT
-  | typeof MAPPINGS_UPDATED_EVENT;
+  | typeof MAPPINGS_UPDATED_EVENT
+  | typeof SELECT_MAPPED_NODE_EVENT;
 
 export type FindComponentsEventHandler = {
   name: typeof FIND_COMPONENTS_EVENT;
@@ -182,4 +184,9 @@ export type SelectionChangedEventHandler = {
 export type MappingsUpdatedEventHandler = {
   name: typeof MAPPINGS_UPDATED_EVENT;
   handler: (mappings: ManualMapping[]) => void;
+};
+
+export type SelectMappedNodeEventHandler = {
+  name: typeof SELECT_MAPPED_NODE_EVENT;
+  handler: (nodeId: string) => void;
 };

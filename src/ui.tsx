@@ -26,6 +26,8 @@ import {
   MappingsUpdatedEventHandler,
   SELECTION_CHANGED_EVENT,
   SelectionChangedEventHandler,
+  SELECT_MAPPED_NODE_EVENT,
+  SelectMappedNodeEventHandler,
 } from "./types";
 import type { SelectionInfo, ManualMapping } from "./types";
 import { getAllMappingIds } from "./componentData";
@@ -130,6 +132,7 @@ const styles = {
     border: `1px solid ${isHighlighted ? "#fde047" : "#e2e8f0"}`,
     marginBottom: "6px",
     transition: "all 0.15s ease",
+    cursor: "pointer",
   }),
   mappingText: {
     fontSize: "12px",
@@ -162,7 +165,7 @@ const styles = {
     transition: "all 0.15s ease",
   },
   mappingsList: {
-    maxHeight: "140px",
+    maxHeight: "100%",
     overflowY: "auto" as const,
   },
   emptyState: {
@@ -207,6 +210,10 @@ function Plugin() {
   function handleUnmapClick(nodeId: string) {
     emit<UnmapElementEventHandler>(UNMAP_ELEMENT_EVENT, nodeId);
     refreshMappings();
+  }
+
+  function handleSelectMappedNode(nodeId: string) {
+    emit<SelectMappedNodeEventHandler>(SELECT_MAPPED_NODE_EVENT, nodeId);
   }
 
   const refreshSelection = useCallback(() => {
@@ -316,14 +323,21 @@ function Plugin() {
               {mappings.map((m) => {
                 const isHighlighted = selection?.nodeId === m.nodeId;
                 return (
-                  <div key={m.nodeId} style={styles.mappingItem(isHighlighted)}>
+                  <div
+                    key={m.nodeId}
+                    style={styles.mappingItem(isHighlighted)}
+                    onClick={() => handleSelectMappedNode(m.nodeId)}
+                  >
                     <div style={styles.mappingText}>
                       <span>{m.nodeName}</span>
                       <span style={styles.mappingArrow}> → </span>
                       <span style={styles.mappingTarget}>{m.mappingId}</span>
                     </div>
                     <button
-                      onClick={() => handleUnmapClick(m.nodeId)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleUnmapClick(m.nodeId);
+                      }}
                       style={styles.removeButton}
                       title="Remove mapping"
                     >

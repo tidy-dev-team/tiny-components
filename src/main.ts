@@ -22,6 +22,8 @@ import {
   MappingsUpdatedEventHandler,
   SELECTION_CHANGED_EVENT,
   SelectionChangedEventHandler,
+  SELECT_MAPPED_NODE_EVENT,
+  SelectMappedNodeEventHandler,
   UNMAP_ELEMENT_EVENT,
   UnmapElementEventHandler,
 } from "./types";
@@ -47,6 +49,10 @@ export default function () {
   });
   on<MapElementEventHandler>(MAP_ELEMENT_EVENT, handleMapElement);
   on<UnmapElementEventHandler>(UNMAP_ELEMENT_EVENT, handleUnmapElement);
+  on<SelectMappedNodeEventHandler>(
+    SELECT_MAPPED_NODE_EVENT,
+    handleSelectMappedNode
+  );
   on<GetManualMappingsEventHandler>(GET_MANUAL_MAPPINGS_EVENT, () => {
     const mappings = handleGetManualMappings();
     emit<MappingsUpdatedEventHandler>(MAPPINGS_UPDATED_EVENT, mappings);
@@ -425,6 +431,19 @@ function handleGetSelection(): SelectionInfo | null {
     nodeName: node.name,
     nodeType: node.type,
   };
+}
+
+function handleSelectMappedNode(nodeId: string): void {
+  const node = figma.getNodeById(nodeId);
+  if (!node || !("type" in node)) {
+    figma.notify("Mapped node not found (it may have been deleted).", {
+      error: true,
+    });
+    return;
+  }
+
+  figma.currentPage.selection = [node as SceneNode];
+  figma.viewport.scrollAndZoomIntoView([node as SceneNode]);
 }
 
 function handleMapElement(nodeId: string, mappingId: string): void {
