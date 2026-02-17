@@ -1,4 +1,28 @@
-# Preact Rectangles
+# Tiny Components
+
+Replace placeholder frames with polished design system components in Figma.
+
+## Features
+
+- Auto-detect frames that match mapping rules and select them on canvas.
+- Replace matched frames with DS components while keeping layout.
+- Manual mapping: map a selected layer to a component ID.
+- Searchable component picker for manual mapping.
+- Click any mapping to select its node on canvas.
+
+## Usage
+
+1. Open the plugin in Figma.
+2. Use **Find Components** to select all frames that match mapping rules.
+3. Use **Replace from DS** to replace all matched frames.
+4. For manual mapping:
+	- Select a layer on canvas.
+	- Choose a component in the searchable picker.
+	- Click **Map** to save the mapping.
+	- Click a mapping row to jump to that node on canvas.
+
+Notes:
+- Card components are inserted with their default slot content (no auto-population).
 
 ## Development guide
 
