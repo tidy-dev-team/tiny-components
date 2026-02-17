@@ -31,7 +31,7 @@ const manualMappings = new Map<string, string>();
 
 export default function () {
   showUI({
-    height: 520,
+    height: 820,
     width: 280,
   });
 
@@ -47,14 +47,11 @@ export default function () {
   });
   on<MapElementEventHandler>(MAP_ELEMENT_EVENT, handleMapElement);
   on<UnmapElementEventHandler>(UNMAP_ELEMENT_EVENT, handleUnmapElement);
-  on<GetManualMappingsEventHandler>(
-    GET_MANUAL_MAPPINGS_EVENT,
-    () => {
-      const mappings = handleGetManualMappings();
-      emit<MappingsUpdatedEventHandler>(MAPPINGS_UPDATED_EVENT, mappings);
-      return mappings;
-    }
-  );
+  on<GetManualMappingsEventHandler>(GET_MANUAL_MAPPINGS_EVENT, () => {
+    const mappings = handleGetManualMappings();
+    emit<MappingsUpdatedEventHandler>(MAPPINGS_UPDATED_EVENT, mappings);
+    return mappings;
+  });
 
   figma.on("selectionchange", () => {
     const selection = handleGetSelection();
@@ -134,7 +131,10 @@ async function handleReplaceComponents() {
  * Priority: manual mappings > name-based matching.
  * Excludes frames that are descendants of other frames to be replaced.
  */
-function collectFramesToReplace(): Array<{ frame: FrameNode; mapping: ComponentMapping }> {
+function collectFramesToReplace(): Array<{
+  frame: FrameNode;
+  mapping: ComponentMapping;
+}> {
   const result: Array<{ frame: FrameNode; mapping: ComponentMapping }> = [];
   const processedIds = new Set<string>();
 
@@ -159,7 +159,11 @@ function collectFramesToReplace(): Array<{ frame: FrameNode; mapping: ComponentM
   return result.filter((item) => {
     let current: BaseNode | null = item.frame.parent;
     while (current !== null) {
-      if ("id" in current && resultIds.has(current.id) && current.id !== item.frame.id) {
+      if (
+        "id" in current &&
+        resultIds.has(current.id) &&
+        current.id !== item.frame.id
+      ) {
         return false;
       }
       current = current.parent;
@@ -171,7 +175,10 @@ function collectFramesToReplace(): Array<{ frame: FrameNode; mapping: ComponentM
 /**
  * Finds all frames that have been manually mapped.
  */
-function findManuallyMappedFrames(): Array<{ frame: FrameNode; mapping: ComponentMapping }> {
+function findManuallyMappedFrames(): Array<{
+  frame: FrameNode;
+  mapping: ComponentMapping;
+}> {
   const result: Array<{ frame: FrameNode; mapping: ComponentMapping }> = [];
 
   manualMappings.forEach((mappingId, nodeId) => {

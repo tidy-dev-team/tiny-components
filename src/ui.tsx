@@ -34,6 +34,8 @@ const styles = {
   container: {
     width: "100%",
     minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column" as const,
     padding: "16px",
     boxSizing: "border-box" as const,
     background: "linear-gradient(180deg, #fafbfc 0%, #f1f5f9 100%)",
@@ -42,6 +44,7 @@ const styles = {
     backgroundColor: "#ffffff",
     borderRadius: "12px",
     padding: "20px",
+    flex: 1,
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)",
   },
   header: {
