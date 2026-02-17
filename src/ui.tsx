@@ -4,7 +4,7 @@ import {
   Text,
   VerticalSpace,
   render,
-  Dropdown,
+  TextboxAutocomplete,
 } from "@create-figma-plugin/ui";
 import { emit, on } from "@create-figma-plugin/utilities";
 import { h } from "preact";
@@ -72,9 +72,15 @@ const styles = {
   },
   selectionBox: (hasSelection: boolean, isMapped: boolean) => ({
     padding: "10px 12px",
-    backgroundColor: isMapped ? "#fef3c7" : hasSelection ? "#ecfdf5" : "#f8fafc",
+    backgroundColor: isMapped
+      ? "#fef3c7"
+      : hasSelection
+      ? "#ecfdf5"
+      : "#f8fafc",
     borderRadius: "8px",
-    border: `1px solid ${isMapped ? "#fcd34d" : hasSelection ? "#6ee7b7" : "#e2e8f0"}`,
+    border: `1px solid ${
+      isMapped ? "#fcd34d" : hasSelection ? "#6ee7b7" : "#e2e8f0"
+    }`,
     marginBottom: "12px",
   }),
   selectionLabel: {
@@ -173,13 +179,8 @@ function Plugin() {
   const [selection, setSelection] = useState<SelectionInfo | null>(null);
   const [mappings, setMappings] = useState<ManualMapping[]>([]);
   const [selectedMappingId, setSelectedMappingId] = useState<string>("");
-  const [mappingOptions] = useState(() => {
-    const ids = getAllMappingIds();
-    return [
-      { value: "", label: "Select component..." },
-      ...ids.map((id) => ({ value: id, label: id })),
-    ];
-  });
+  const [mappingOptionValues] = useState(() => getAllMappingIds());
+  const mappingOptions = mappingOptionValues.map((id) => ({ value: id }));
 
   function handleFindComponentsClick() {
     emit<FindComponentsEventHandler>(FIND_COMPONENTS_EVENT);
@@ -191,7 +192,11 @@ function Plugin() {
 
   function handleMapClick() {
     if (!selection || !selectedMappingId) return;
-    emit<MapElementEventHandler>(MAP_ELEMENT_EVENT, selection.nodeId, selectedMappingId);
+    emit<MapElementEventHandler>(
+      MAP_ELEMENT_EVENT,
+      selection.nodeId,
+      selectedMappingId
+    );
     setSelectedMappingId("");
     refreshMappings();
   }
@@ -210,12 +215,18 @@ function Plugin() {
   }, []);
 
   useEffect(() => {
-    on<SelectionChangedEventHandler>(SELECTION_CHANGED_EVENT, (info: SelectionInfo | null) => {
-      setSelection(info);
-    });
-    on<MappingsUpdatedEventHandler>(MAPPINGS_UPDATED_EVENT, (nextMappings: ManualMapping[]) => {
-      setMappings(nextMappings);
-    });
+    on<SelectionChangedEventHandler>(
+      SELECTION_CHANGED_EVENT,
+      (info: SelectionInfo | null) => {
+        setSelection(info);
+      }
+    );
+    on<MappingsUpdatedEventHandler>(
+      MAPPINGS_UPDATED_EVENT,
+      (nextMappings: ManualMapping[]) => {
+        setMappings(nextMappings);
+      }
+    );
 
     refreshSelection();
     refreshMappings();
@@ -269,10 +280,13 @@ function Plugin() {
           {/* Map Controls */}
           <div style={styles.mapRow}>
             <div style={styles.dropdownWrapper}>
-              <Dropdown
+              <TextboxAutocomplete
+                filter
+                strict
                 options={mappingOptions}
                 value={selectedMappingId}
-                onChange={(e) => setSelectedMappingId(e.currentTarget.value)}
+                placeholder="Select component..."
+                onValueInput={setSelectedMappingId}
                 disabled={!selection}
               />
             </div>
@@ -288,9 +302,7 @@ function Plugin() {
 
         {/* Current Mappings */}
         <div style={styles.section}>
-          <div style={styles.sectionTitle}>
-            Mappings ({mappings.length})
-          </div>
+          <div style={styles.sectionTitle}>Mappings ({mappings.length})</div>
 
           {mappings.length === 0 ? (
             <div style={styles.emptyState}>
@@ -312,7 +324,12 @@ function Plugin() {
                       style={styles.removeButton}
                       title="Remove mapping"
                     >
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                      >
                         <path
                           d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5"
                           stroke="currentColor"
