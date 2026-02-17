@@ -93,3 +93,15 @@ export function getComponentByName(
 export function getAllComponentNames(): string[] {
   return componentData.components.map((c) => c.name);
 }
+
+// Get mapping by ID (for manual mapping lookups)
+export function getMappingById(
+  mappingId: string
+): ComponentMapping | undefined {
+  return propertyMappings.mappings[mappingId];
+}
+
+// Get all mapping IDs for dropdown
+export function getAllMappingIds(): string[] {
+  return Object.keys(propertyMappings.mappings);
+}

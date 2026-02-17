@@ -1,25 +1,35 @@
-import { on, showUI } from "@create-figma-plugin/utilities";
+import { on, showUI, emit } from "@create-figma-plugin/utilities";
 import {
   findMappingForFrame,
-  getAllMappings,
   getComponentByKey,
+  getMappingById,
 } from "./componentData";
 import { extractFrameContent } from "./extraction/frameAnalyzer";
 import { applyProperties } from "./replacement/propertyApplicator";
-import type { ComponentMapping } from "./types";
+import type { ComponentMapping, ManualMapping, SelectionInfo } from "./types";
 import {
   FIND_COMPONENTS_EVENT,
   FindComponentsEventHandler,
+  GET_MANUAL_MAPPINGS_EVENT,
+  GetManualMappingsEventHandler,
+  GET_SELECTION_EVENT,
+  GetSelectionEventHandler,
+  MAP_ELEMENT_EVENT,
+  MapElementEventHandler,
   REPLACE_COMPONENTS_EVENT,
   ReplaceComponentsEventHandler,
+  SELECTION_CHANGED_EVENT,
+  SelectionChangedEventHandler,
+  UNMAP_ELEMENT_EVENT,
+  UnmapElementEventHandler,
 } from "./types";
 
-// Cache for imported components
 const componentCache = new Map<string, ComponentSetNode | ComponentNode>();
+const manualMappings = new Map<string, string>();
 
 export default function () {
   showUI({
-    height: 280,
+    height: 520,
     width: 280,
   });
 
@@ -28,6 +38,18 @@ export default function () {
     REPLACE_COMPONENTS_EVENT,
     handleReplaceComponents
   );
+  on<GetSelectionEventHandler>(GET_SELECTION_EVENT, handleGetSelection);
+  on<MapElementEventHandler>(MAP_ELEMENT_EVENT, handleMapElement);
+  on<UnmapElementEventHandler>(UNMAP_ELEMENT_EVENT, handleUnmapElement);
+  on<GetManualMappingsEventHandler>(
+    GET_MANUAL_MAPPINGS_EVENT,
+    handleGetManualMappings
+  );
+
+  figma.on("selectionchange", () => {
+    const selection = handleGetSelection();
+    emit<SelectionChangedEventHandler>(SELECTION_CHANGED_EVENT, selection);
+  });
 }
 
 /**
@@ -50,11 +72,12 @@ function handleFindComponents() {
 
 /**
  * Replaces all matching frames with their corresponding DS components.
+ * Priority: manual mappings > name-based matching
  */
 async function handleReplaceComponents() {
-  const matchingFrames = findMatchingFrames();
+  const framesToReplace = collectFramesToReplace();
 
-  if (matchingFrames.length === 0) {
+  if (framesToReplace.length === 0) {
     figma.notify("No matching frames found on this page.");
     return;
   }
@@ -62,27 +85,18 @@ async function handleReplaceComponents() {
   const replacements: InstanceNode[] = [];
   let skipped = 0;
 
-  for (const frame of matchingFrames) {
-    const matchResult = findMappingForFrame(frame.name);
-    if (matchResult === null) {
-      skipped += 1;
-      continue;
-    }
-
-    const replacement = await replaceFrameWithComponent(
-      frame,
-      matchResult.mapping
-    );
+  for (const { frame, mapping } of framesToReplace) {
+    const replacement = await replaceFrameWithComponent(frame, mapping);
     if (replacement === null) {
       console.warn(`Skipped frame "${frame.name}" — component import failed`);
       skipped += 1;
       continue;
     }
 
+    manualMappings.delete(frame.id);
     replacements.push(replacement);
   }
 
-  // Update "Container" wrapper frames to use HUG sizing
   updateContainerWrappersToHug(replacements);
 
   if (replacements.length === 0) {
@@ -103,6 +117,64 @@ async function handleReplaceComponents() {
   figma.notify(
     `Replaced ${replacements.length} ${replacedSuffix}, skipped ${skipped} ${skippedSuffix}`
   );
+}
+
+/**
+ * Collects all frames to replace with their mappings.
+ * Priority: manual mappings > name-based matching.
+ * Excludes frames that are descendants of other frames to be replaced.
+ */
+function collectFramesToReplace(): Array<{ frame: FrameNode; mapping: ComponentMapping }> {
+  const result: Array<{ frame: FrameNode; mapping: ComponentMapping }> = [];
+  const processedIds = new Set<string>();
+
+  const manuallyMappedFrames = findManuallyMappedFrames();
+  for (const { frame, mapping } of manuallyMappedFrames) {
+    processedIds.add(frame.id);
+    result.push({ frame, mapping });
+  }
+
+  const autoMatchedFrames = findMatchingFrames();
+  for (const frame of autoMatchedFrames) {
+    if (processedIds.has(frame.id)) {
+      continue;
+    }
+    const matchResult = findMappingForFrame(frame.name);
+    if (matchResult !== null) {
+      result.push({ frame, mapping: matchResult.mapping });
+    }
+  }
+
+  const resultIds = new Set(result.map((r) => r.frame.id));
+  return result.filter((item) => {
+    let current: BaseNode | null = item.frame.parent;
+    while (current !== null) {
+      if ("id" in current && resultIds.has(current.id) && current.id !== item.frame.id) {
+        return false;
+      }
+      current = current.parent;
+    }
+    return true;
+  });
+}
+
+/**
+ * Finds all frames that have been manually mapped.
+ */
+function findManuallyMappedFrames(): Array<{ frame: FrameNode; mapping: ComponentMapping }> {
+  const result: Array<{ frame: FrameNode; mapping: ComponentMapping }> = [];
+
+  manualMappings.forEach((mappingId, nodeId) => {
+    const node = figma.getNodeById(nodeId);
+    if (node && node.type === "FRAME") {
+      const mapping = getMappingById(mappingId);
+      if (mapping) {
+        result.push({ frame: node as FrameNode, mapping });
+      }
+    }
+  });
+
+  return result;
 }
 
 /**
@@ -278,7 +350,6 @@ function updateContainerWrappersToHug(instances: InstanceNode[]) {
   const processed = new Set<string>();
 
   for (const instance of instances) {
-    // Walk up the entire ancestor chain from each replaced instance
     let current: BaseNode | null = instance.parent;
     while (current !== null) {
       if (current.type !== "FRAME") {
@@ -297,7 +368,6 @@ function updateContainerWrappersToHug(instances: InstanceNode[]) {
         continue;
       }
 
-      // Set sizing to HUG on both axes, enabling auto-layout if needed
       try {
         if (current.layoutMode === "NONE") {
           current.layoutMode = "VERTICAL";
@@ -308,7 +378,6 @@ function updateContainerWrappersToHug(instances: InstanceNode[]) {
         current.layoutSizingHorizontal = "HUG";
         current.layoutSizingVertical = "HUG";
 
-        // Reset children's layout properties that conflict with HUG parent
         for (const child of current.children) {
           if ("layoutAlign" in child) {
             child.layoutAlign = "INHERIT";
@@ -325,4 +394,41 @@ function updateContainerWrappersToHug(instances: InstanceNode[]) {
       current = current.parent;
     }
   }
+}
+
+function handleGetSelection(): SelectionInfo | null {
+  const selection = figma.currentPage.selection;
+  if (selection.length === 0) {
+    return null;
+  }
+
+  const node = selection[0];
+  return {
+    nodeId: node.id,
+    nodeName: node.name,
+    nodeType: node.type,
+  };
+}
+
+function handleMapElement(nodeId: string, mappingId: string): void {
+  manualMappings.set(nodeId, mappingId);
+}
+
+function handleUnmapElement(nodeId: string): void {
+  manualMappings.delete(nodeId);
+}
+
+function handleGetManualMappings(): ManualMapping[] {
+  const result: ManualMapping[] = [];
+
+  manualMappings.forEach((mappingId, nodeId) => {
+    const node = figma.getNodeById(nodeId);
+    result.push({
+      nodeId,
+      nodeName: node ? node.name : "(deleted)",
+      mappingId,
+    });
+  });
+
+  return result;
 }

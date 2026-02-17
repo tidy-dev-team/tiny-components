@@ -106,15 +106,41 @@ export interface ComponentInfo {
 }
 
 // ============================================
+// Selection & Manual Mapping Types
+// ============================================
+
+export interface SelectionInfo {
+  nodeId: string;
+  nodeName: string;
+  nodeType: string;
+}
+
+export interface ManualMapping {
+  nodeId: string;
+  nodeName: string;
+  mappingId: string;
+}
+
+// ============================================
 // Event Types
 // ============================================
 
 export const FIND_COMPONENTS_EVENT = "FIND_COMPONENTS" as const;
 export const REPLACE_COMPONENTS_EVENT = "REPLACE_COMPONENTS" as const;
+export const GET_SELECTION_EVENT = "GET_SELECTION" as const;
+export const MAP_ELEMENT_EVENT = "MAP_ELEMENT" as const;
+export const UNMAP_ELEMENT_EVENT = "UNMAP_ELEMENT" as const;
+export const GET_MANUAL_MAPPINGS_EVENT = "GET_MANUAL_MAPPINGS" as const;
+export const SELECTION_CHANGED_EVENT = "SELECTION_CHANGED" as const;
 
 export type PluginEvent =
   | typeof FIND_COMPONENTS_EVENT
-  | typeof REPLACE_COMPONENTS_EVENT;
+  | typeof REPLACE_COMPONENTS_EVENT
+  | typeof GET_SELECTION_EVENT
+  | typeof MAP_ELEMENT_EVENT
+  | typeof UNMAP_ELEMENT_EVENT
+  | typeof GET_MANUAL_MAPPINGS_EVENT
+  | typeof SELECTION_CHANGED_EVENT;
 
 export type FindComponentsEventHandler = {
   name: typeof FIND_COMPONENTS_EVENT;
@@ -124,4 +150,29 @@ export type FindComponentsEventHandler = {
 export type ReplaceComponentsEventHandler = {
   name: typeof REPLACE_COMPONENTS_EVENT;
   handler: () => void | Promise<void>;
+};
+
+export type GetSelectionEventHandler = {
+  name: typeof GET_SELECTION_EVENT;
+  handler: () => SelectionInfo | null;
+};
+
+export type MapElementEventHandler = {
+  name: typeof MAP_ELEMENT_EVENT;
+  handler: (nodeId: string, mappingId: string) => void;
+};
+
+export type UnmapElementEventHandler = {
+  name: typeof UNMAP_ELEMENT_EVENT;
+  handler: (nodeId: string) => void;
+};
+
+export type GetManualMappingsEventHandler = {
+  name: typeof GET_MANUAL_MAPPINGS_EVENT;
+  handler: () => ManualMapping[];
+};
+
+export type SelectionChangedEventHandler = {
+  name: typeof SELECTION_CHANGED_EVENT;
+  handler: (selection: SelectionInfo | null) => void;
 };
