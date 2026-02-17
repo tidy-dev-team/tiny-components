@@ -16,17 +16,18 @@ Replace placeholder frames with polished design system components in Figma.
 2. Use **Find Components** to select all frames that match mapping rules.
 3. Use **Replace from DS** to replace all matched frames.
 4. For manual mapping:
-	- Select a layer on canvas.
-	- Choose a component in the searchable picker.
-	- Click **Map** to save the mapping.
-	- Click a mapping row to jump to that node on canvas.
+   - Select a layer on canvas.
+   - Choose a component in the searchable picker.
+   - Click **Map** to save the mapping.
+   - Click a mapping row to jump to that node on canvas.
 
 Notes:
+
 - Card components are inserted with their default slot content (no auto-population).
 
 ## Development guide
 
-*This plugin is built with [Create Figma Plugin](https://yuanqing.github.io/create-figma-plugin/).*
+_This plugin is built with [Create Figma Plugin](https://yuanqing.github.io/create-figma-plugin/)._
 
 ### Pre-requisites
 

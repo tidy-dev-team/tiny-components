@@ -57,7 +57,6 @@ export async function applyProperties(
   for (const swap of instanceSwaps) {
     await applyInstanceSwap(instance, swap.target, swap.componentKey);
   }
-
 }
 
 function maybeApplyTagTextProperty(
@@ -105,7 +104,6 @@ function findAvailableTextProperty(
   const preferred = textProps.find(([name]) => /text|label/i.test(name));
   return preferred ? preferred[0] : null;
 }
-
 
 /**
  * Extracts a value from the content based on the source extractor type.
