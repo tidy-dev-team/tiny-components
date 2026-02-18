@@ -38,7 +38,7 @@
       "properties": []
     },
     "banner": {
-      "componentKey": "d521d4fee01b7734ffa94436c74b6f51d2fad42c",
+      "componentKey": "2cd2b349629bfbec7e08da93d97e9fd43b3f4fe2",
       "frameMatcher": {
         "type": "nameFuzzy",
         "value": "banner"
