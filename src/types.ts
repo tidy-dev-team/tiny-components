@@ -55,6 +55,7 @@ export interface ComponentMapping {
   componentKey: string;
   frameMatcher: FrameMatcher;
   properties: PropertyMappingRule[];
+  adjustNamedContainerAncestorsToHug?: boolean;
   instanceSizing?: {
     horizontal?: "HUG" | "FILL" | "FIXED";
     vertical?: "HUG" | "FILL" | "FIXED";
@@ -109,10 +110,14 @@ export interface ComponentInfo {
 // Selection & Manual Mapping Types
 // ============================================
 
-export interface SelectionInfo {
+export interface SelectionNodeInfo {
   nodeId: string;
   nodeName: string;
   nodeType: string;
+}
+
+export interface SelectionInfo {
+  nodes: SelectionNodeInfo[];
 }
 
 export interface ManualMapping {
@@ -128,7 +133,7 @@ export interface ManualMapping {
 export const FIND_COMPONENTS_EVENT = "FIND_COMPONENTS" as const;
 export const REPLACE_COMPONENTS_EVENT = "REPLACE_COMPONENTS" as const;
 export const GET_SELECTION_EVENT = "GET_SELECTION" as const;
-export const MAP_ELEMENT_EVENT = "MAP_ELEMENT" as const;
+export const MAP_ELEMENTS_EVENT = "MAP_ELEMENTS" as const;
 export const UNMAP_ELEMENT_EVENT = "UNMAP_ELEMENT" as const;
 export const GET_MANUAL_MAPPINGS_EVENT = "GET_MANUAL_MAPPINGS" as const;
 export const SELECTION_CHANGED_EVENT = "SELECTION_CHANGED" as const;
@@ -139,7 +144,7 @@ export type PluginEvent =
   | typeof FIND_COMPONENTS_EVENT
   | typeof REPLACE_COMPONENTS_EVENT
   | typeof GET_SELECTION_EVENT
-  | typeof MAP_ELEMENT_EVENT
+  | typeof MAP_ELEMENTS_EVENT
   | typeof UNMAP_ELEMENT_EVENT
   | typeof GET_MANUAL_MAPPINGS_EVENT
   | typeof SELECTION_CHANGED_EVENT
@@ -161,9 +166,9 @@ export type GetSelectionEventHandler = {
   handler: () => SelectionInfo | null;
 };
 
-export type MapElementEventHandler = {
-  name: typeof MAP_ELEMENT_EVENT;
-  handler: (nodeId: string, mappingId: string) => void;
+export type MapElementsEventHandler = {
+  name: typeof MAP_ELEMENTS_EVENT;
+  handler: (nodeIds: string[], mappingId: string) => void;
 };
 
 export type UnmapElementEventHandler = {

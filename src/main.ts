@@ -14,8 +14,8 @@ import {
   GetManualMappingsEventHandler,
   GET_SELECTION_EVENT,
   GetSelectionEventHandler,
-  MAP_ELEMENT_EVENT,
-  MapElementEventHandler,
+  MAP_ELEMENTS_EVENT,
+  MapElementsEventHandler,
   REPLACE_COMPONENTS_EVENT,
   ReplaceComponentsEventHandler,
   MAPPINGS_UPDATED_EVENT,
@@ -30,6 +30,7 @@ import {
 
 const componentCache = new Map<string, ComponentSetNode | ComponentNode>();
 const manualMappings = new Map<string, string>();
+const MANUAL_MAPPINGS_STORAGE_KEY = "tiny-components-manual-mappings-v1";
 
 export default function () {
   showUI({
@@ -47,7 +48,7 @@ export default function () {
     emit<SelectionChangedEventHandler>(SELECTION_CHANGED_EVENT, selection);
     return selection;
   });
-  on<MapElementEventHandler>(MAP_ELEMENT_EVENT, handleMapElement);
+  on<MapElementsEventHandler>(MAP_ELEMENTS_EVENT, handleMapElements);
   on<UnmapElementEventHandler>(UNMAP_ELEMENT_EVENT, handleUnmapElement);
   on<SelectMappedNodeEventHandler>(
     SELECT_MAPPED_NODE_EVENT,
@@ -63,6 +64,8 @@ export default function () {
     const selection = handleGetSelection();
     emit<SelectionChangedEventHandler>(SELECTION_CHANGED_EVENT, selection);
   });
+
+  void hydrateManualMappings();
 }
 
 /**
@@ -95,8 +98,12 @@ async function handleReplaceComponents() {
     return;
   }
 
-  const replacements: InstanceNode[] = [];
+  const replacements: Array<{
+    instance: InstanceNode;
+    mapping: ComponentMapping;
+  }> = [];
   let skipped = 0;
+  let removedManualMappings = false;
 
   for (const { frame, mapping } of framesToReplace) {
     const replacement = await replaceFrameWithComponent(frame, mapping);
@@ -106,8 +113,14 @@ async function handleReplaceComponents() {
       continue;
     }
 
-    manualMappings.delete(frame.id);
-    replacements.push(replacement);
+    if (manualMappings.delete(frame.id)) {
+      removedManualMappings = true;
+    }
+    replacements.push({ instance: replacement, mapping });
+  }
+
+  if (removedManualMappings) {
+    persistManualMappings();
   }
 
   updateContainerWrappersToHug(replacements);
@@ -117,8 +130,9 @@ async function handleReplaceComponents() {
     return;
   }
 
-  figma.currentPage.selection = replacements;
-  figma.viewport.scrollAndZoomIntoView(replacements);
+  const replacementInstances = replacements.map((item) => item.instance);
+  figma.currentPage.selection = replacementInstances;
+  figma.viewport.scrollAndZoomIntoView(replacementInstances);
 
   const replacedSuffix = replacements.length === 1 ? "frame" : "frames";
   if (skipped === 0) {
@@ -186,6 +200,8 @@ function findManuallyMappedFrames(): Array<{
   mapping: ComponentMapping;
 }> {
   const result: Array<{ frame: FrameNode; mapping: ComponentMapping }> = [];
+
+  pruneInvalidManualMappings();
 
   manualMappings.forEach((mappingId, nodeId) => {
     const node = figma.getNodeById(nodeId);
@@ -369,10 +385,16 @@ function applyFrameGeometry(source: FrameNode, target: InstanceNode) {
  * Finds parent frames named "Container" that directly wrap replaced instances
  * and sets their horizontal and vertical sizing to HUG.
  */
-function updateContainerWrappersToHug(instances: InstanceNode[]) {
+function updateContainerWrappersToHug(
+  replacements: Array<{ instance: InstanceNode; mapping: ComponentMapping }>
+) {
   const processed = new Set<string>();
 
-  for (const instance of instances) {
+  for (const { instance, mapping } of replacements) {
+    if (mapping.adjustNamedContainerAncestorsToHug !== true) {
+      continue;
+    }
+
     let current: BaseNode | null = instance.parent;
     while (current !== null) {
       if (current.type !== "FRAME") {
@@ -420,16 +442,17 @@ function updateContainerWrappersToHug(instances: InstanceNode[]) {
 }
 
 function handleGetSelection(): SelectionInfo | null {
-  const selection = figma.currentPage.selection;
-  if (selection.length === 0) {
+  const selectedNodes = figma.currentPage.selection;
+  if (selectedNodes.length === 0) {
     return null;
   }
 
-  const node = selection[0];
   return {
-    nodeId: node.id,
-    nodeName: node.name,
-    nodeType: node.type,
+    nodes: selectedNodes.map((node) => ({
+      nodeId: node.id,
+      nodeName: node.name,
+      nodeType: node.type,
+    })),
   };
 }
 
@@ -446,16 +469,57 @@ function handleSelectMappedNode(nodeId: string): void {
   figma.viewport.scrollAndZoomIntoView([node as SceneNode]);
 }
 
-function handleMapElement(nodeId: string, mappingId: string): void {
-  manualMappings.set(nodeId, mappingId);
+function handleMapElements(nodeIds: string[], mappingId: string): void {
+  const mapping = getMappingById(mappingId);
+  if (!mapping) {
+    figma.notify("Invalid mapping selected.", { error: true });
+    return;
+  }
+
+  if (nodeIds.length === 0) {
+    figma.notify("No layers selected.", { error: true });
+    return;
+  }
+
+  let mappedCount = 0;
+  let skippedCount = 0;
+
+  for (const nodeId of nodeIds) {
+    const node = figma.getNodeById(nodeId);
+    if (!node || node.type !== "FRAME") {
+      skippedCount += 1;
+      continue;
+    }
+    manualMappings.set(nodeId, mappingId);
+    mappedCount += 1;
+  }
+
+  if (mappedCount === 0) {
+    figma.notify("No FRAME layers selected to map.", { error: true });
+    return;
+  }
+
+  persistManualMappings();
   emit<MappingsUpdatedEventHandler>(
     MAPPINGS_UPDATED_EVENT,
     handleGetManualMappings()
   );
+
+  if (skippedCount > 0) {
+    const skippedSuffix = skippedCount === 1 ? "layer" : "layers";
+    figma.notify(
+      `Mapped ${mappedCount} frame(s), skipped ${skippedCount} ${skippedSuffix}.`
+    );
+    return;
+  }
+
+  figma.notify(`Mapped ${mappedCount} frame(s).`);
 }
 
 function handleUnmapElement(nodeId: string): void {
-  manualMappings.delete(nodeId);
+  if (manualMappings.delete(nodeId)) {
+    persistManualMappings();
+  }
   emit<MappingsUpdatedEventHandler>(
     MAPPINGS_UPDATED_EVENT,
     handleGetManualMappings()
@@ -463,6 +527,11 @@ function handleUnmapElement(nodeId: string): void {
 }
 
 function handleGetManualMappings(): ManualMapping[] {
+  const pruned = pruneInvalidManualMappings();
+  if (pruned) {
+    persistManualMappings();
+  }
+
   const result: ManualMapping[] = [];
 
   manualMappings.forEach((mappingId, nodeId) => {
@@ -475,4 +544,62 @@ function handleGetManualMappings(): ManualMapping[] {
   });
 
   return result;
+}
+
+async function hydrateManualMappings(): Promise<void> {
+  try {
+    const stored = (await figma.clientStorage.getAsync(
+      MANUAL_MAPPINGS_STORAGE_KEY
+    )) as Record<string, string> | null;
+
+    manualMappings.clear();
+
+    if (stored && typeof stored === "object") {
+      for (const [nodeId, mappingId] of Object.entries(stored)) {
+        if (typeof nodeId !== "string" || typeof mappingId !== "string") {
+          continue;
+        }
+        manualMappings.set(nodeId, mappingId);
+      }
+    }
+
+    const pruned = pruneInvalidManualMappings();
+    if (pruned) {
+      persistManualMappings();
+    }
+
+    emit<MappingsUpdatedEventHandler>(
+      MAPPINGS_UPDATED_EVENT,
+      handleGetManualMappings()
+    );
+  } catch (error) {
+    console.error("Failed to load manual mappings from clientStorage:", error);
+  }
+}
+
+function persistManualMappings(): void {
+  const serializable: Record<string, string> = {};
+  manualMappings.forEach((mappingId, nodeId) => {
+    serializable[nodeId] = mappingId;
+  });
+
+  void figma.clientStorage
+    .setAsync(MANUAL_MAPPINGS_STORAGE_KEY, serializable)
+    .catch((error) => {
+      console.error("Failed to persist manual mappings:", error);
+    });
+}
+
+function pruneInvalidManualMappings(): boolean {
+  let changed = false;
+
+  manualMappings.forEach((mappingId, nodeId) => {
+    const node = figma.getNodeById(nodeId);
+    if (!node || node.type !== "FRAME" || !getMappingById(mappingId)) {
+      manualMappings.delete(nodeId);
+      changed = true;
+    }
+  });
+
+  return changed;
 }

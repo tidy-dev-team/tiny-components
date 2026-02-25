@@ -1,7 +1,6 @@
 import {
   Button,
   Muted,
-  Text,
   VerticalSpace,
   render,
   TextboxAutocomplete,
@@ -16,8 +15,8 @@ import {
   ReplaceComponentsEventHandler,
   GET_SELECTION_EVENT,
   GetSelectionEventHandler,
-  MAP_ELEMENT_EVENT,
-  MapElementEventHandler,
+  MAP_ELEMENTS_EVENT,
+  MapElementsEventHandler,
   UNMAP_ELEMENT_EVENT,
   UnmapElementEventHandler,
   GET_MANUAL_MAPPINGS_EVENT,
@@ -47,6 +46,8 @@ const styles = {
     borderRadius: "12px",
     padding: "20px",
     flex: 1,
+    display: "flex",
+    flexDirection: "column" as const,
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)",
   },
   header: {
@@ -178,6 +179,8 @@ const styles = {
     display: "flex",
     flexDirection: "column" as const,
     gap: "8px",
+    marginTop: "auto",
+    paddingTop: "16px",
   },
 };
 
@@ -198,9 +201,9 @@ function Plugin() {
 
   function handleMapClick() {
     if (!selection || !selectedMappingId) return;
-    emit<MapElementEventHandler>(
-      MAP_ELEMENT_EVENT,
-      selection.nodeId,
+    emit<MapElementsEventHandler>(
+      MAP_ELEMENTS_EVENT,
+      selection.nodes.map((node) => node.nodeId),
       selectedMappingId
     );
     setSelectedMappingId("");
@@ -225,13 +228,13 @@ function Plugin() {
   }, []);
 
   useEffect(() => {
-    on<SelectionChangedEventHandler>(
+    const offSelectionChanged = on<SelectionChangedEventHandler>(
       SELECTION_CHANGED_EVENT,
       (info: SelectionInfo | null) => {
         setSelection(info);
       }
     );
-    on<MappingsUpdatedEventHandler>(
+    const offMappingsUpdated = on<MappingsUpdatedEventHandler>(
       MAPPINGS_UPDATED_EVENT,
       (nextMappings: ManualMapping[]) => {
         setMappings(nextMappings);
@@ -240,11 +243,40 @@ function Plugin() {
 
     refreshSelection();
     refreshMappings();
+
+    return () => {
+      offSelectionChanged();
+      offMappingsUpdated();
+    };
   }, [refreshSelection, refreshMappings]);
 
-  const selectedMapping = selection
-    ? mappings.find((m) => m.nodeId === selection.nodeId)
-    : null;
+  const selectionNodes = selection?.nodes ?? [];
+  const selectedNodeIds = new Set(selectionNodes.map((node) => node.nodeId));
+  const frameSelectionCount = selectionNodes.filter(
+    (node) => node.nodeType === "FRAME"
+  ).length;
+  const invalidSelectionCount = selectionNodes.length - frameSelectionCount;
+  const canMapSelection = frameSelectionCount > 0;
+  const selectedMapping =
+    selectionNodes.length === 1
+      ? mappings.find((m) => m.nodeId === selectionNodes[0].nodeId) ?? null
+      : null;
+  const selectionLabel =
+    selectionNodes.length === 0
+      ? "No Selection"
+      : selectionNodes.length === 1
+      ? "Selected Layer"
+      : `Selected Layers (${selectionNodes.length})`;
+  const selectionName =
+    selectionNodes.length === 0
+      ? "Select one or more frames on canvas"
+      : selectionNodes.length === 1
+      ? `${selectionNodes[0].nodeName} (${selectionNodes[0].nodeType})`
+      : `${selectionNodes.slice(0, 2).map((n) => n.nodeName).join(", ")}${
+          selectionNodes.length > 2 ? ` +${selectionNodes.length - 2} more` : ""
+        }`;
+  const mapButtonLabel =
+    frameSelectionCount > 1 ? `Map ${frameSelectionCount} Frames` : "Map";
 
   return (
     <div style={styles.container}>
@@ -257,16 +289,6 @@ function Plugin() {
           </div>
         </div>
 
-        {/* Primary Actions */}
-        <div style={styles.buttonGroup}>
-          <Button secondary fullWidth onClick={handleFindComponentsClick}>
-            Find Components
-          </Button>
-          <Button fullWidth onClick={handleReplaceComponentsClick}>
-            Replace from DS
-          </Button>
-        </div>
-
         {/* Manual Mapping Section */}
         <div style={styles.section}>
           <div style={styles.sectionTitle}>Manual Mapping</div>
@@ -274,11 +296,25 @@ function Plugin() {
           {/* Selection Box */}
           <div style={styles.selectionBox(!!selection, !!selectedMapping)}>
             <div style={styles.selectionLabel}>
-              {selection ? "Selected Layer" : "No Selection"}
+              {selectionLabel}
             </div>
             <div style={styles.selectionName}>
-              {selection ? selection.nodeName : "Select a layer on canvas"}
+              {selectionName}
             </div>
+            {selectionNodes.length > 0 && !canMapSelection && (
+              <div style={styles.mappedBadge}>
+                <span>FRAME-only mapping</span>
+              </div>
+            )}
+            {invalidSelectionCount > 0 && canMapSelection && (
+              <div style={styles.mappedBadge}>
+                <span>
+                  {invalidSelectionCount} non-frame{" "}
+                  {invalidSelectionCount === 1 ? "layer" : "layers"} will be
+                  skipped
+                </span>
+              </div>
+            )}
             {selectedMapping && (
               <div style={styles.mappedBadge}>
                 <span>Mapped to:</span>
@@ -297,15 +333,15 @@ function Plugin() {
                 value={selectedMappingId}
                 placeholder="Select component..."
                 onValueInput={setSelectedMappingId}
-                disabled={!selection}
+                disabled={!canMapSelection}
               />
             </div>
             <Button
               secondary
               onClick={handleMapClick}
-              disabled={!selection || !selectedMappingId}
+              disabled={!canMapSelection || !selectedMappingId}
             >
-              Map
+              {mapButtonLabel}
             </Button>
           </div>
         </div>
@@ -321,7 +357,7 @@ function Plugin() {
           ) : (
             <div style={styles.mappingsList}>
               {mappings.map((m) => {
-                const isHighlighted = selection?.nodeId === m.nodeId;
+                const isHighlighted = selectedNodeIds.has(m.nodeId);
                 return (
                   <div
                     key={m.nodeId}
@@ -350,8 +386,8 @@ function Plugin() {
                         <path
                           d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
                         />
                       </svg>
                     </button>
@@ -360,6 +396,16 @@ function Plugin() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Primary Actions */}
+        <div style={styles.buttonGroup}>
+          <Button secondary fullWidth onClick={handleFindComponentsClick}>
+            Find Components
+          </Button>
+          <Button fullWidth onClick={handleReplaceComponentsClick}>
+            Replace from DS
+          </Button>
         </div>
       </div>
 

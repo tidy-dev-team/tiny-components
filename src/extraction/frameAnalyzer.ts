@@ -104,9 +104,13 @@ function findNonTextVisualNodes(node: SceneNode): SceneNode[] {
  * Determines if a node is likely an icon based on type and size.
  */
 function isLikelyIcon(node: SceneNode): boolean {
-  // Instance nodes are very likely icons
+  // Instance nodes are often icons, but keep size bounds to avoid matching
+  // larger semantic components.
   if (node.type === "INSTANCE") {
-    return true;
+    const maxDimension = Math.max(node.width, node.height);
+    if (maxDimension <= 64) {
+      return true;
+    }
   }
 
   // Small frames/groups might be icon containers
