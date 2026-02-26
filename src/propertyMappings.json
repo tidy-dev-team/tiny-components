@@ -35,7 +35,12 @@
         "type": "nameFuzzy",
         "value": "card"
       },
-      "properties": []
+      "properties": [
+        {
+          "target": "kpi num ✏️#291:3",
+          "source": { "type": "textFromFrame", "frameName": "Heading 2" }
+        }
+      ]
     },
     "banner": {
       "componentKey": "2cd2b349629bfbec7e08da93d97e9fd43b3f4fe2",

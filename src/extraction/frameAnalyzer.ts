@@ -7,6 +7,7 @@ import type { ExtractedContent } from "../types";
 export function extractFrameContent(frame: FrameNode): ExtractedContent {
   const textNodes = findAllTextNodes(frame);
   const visualNodes = findNonTextVisualNodes(frame);
+  const namedFrameTexts = extractNamedFrameTexts(frame);
 
   // Find primary text (largest font size, or longest if same size)
   const primaryText = findPrimaryText(textNodes);
@@ -21,6 +22,7 @@ export function extractFrameContent(frame: FrameNode): ExtractedContent {
       hasRightIcon: false,
       leftIconKey: firstIcon ? getInstanceKey(firstIcon) : null,
       rightIconKey: null,
+      namedFrameTexts,
     };
   }
 
@@ -52,7 +54,41 @@ export function extractFrameContent(frame: FrameNode): ExtractedContent {
     hasRightIcon: rightIcon !== null,
     leftIconKey: leftIcon ? getInstanceKey(leftIcon) : null,
     rightIconKey: rightIcon ? getInstanceKey(rightIcon) : null,
+    namedFrameTexts,
   };
+}
+
+/**
+ * Recursively scans descendant frames and groups, capturing the primary text
+ * of each into a map keyed by lowercased node name.
+ */
+function extractNamedFrameTexts(root: SceneNode): Record<string, string> {
+  const result: Record<string, string> = {};
+  collectNamedFrameTexts(root, result);
+  return result;
+}
+
+function collectNamedFrameTexts(
+  node: SceneNode,
+  result: Record<string, string>
+): void {
+  if (!("children" in node)) {
+    return;
+  }
+
+  for (const child of node.children) {
+    if ((child.type === "FRAME" || child.type === "GROUP") && child.name) {
+      const key = child.name.toLowerCase();
+      if (!(key in result)) {
+        const texts = findAllTextNodes(child as SceneNode);
+        const primary = findPrimaryText(texts);
+        if (primary) {
+          result[key] = primary.characters;
+        }
+      }
+    }
+    collectNamedFrameTexts(child as SceneNode, result);
+  }
 }
 
 /**

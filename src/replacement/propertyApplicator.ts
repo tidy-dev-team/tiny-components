@@ -26,19 +26,24 @@ export async function applyProperties(
       continue;
     }
 
+    const resolvedTarget = resolvePropertyTarget(instance, rule.target);
+    if (resolvedTarget === null) {
+      continue;
+    }
+
     // Instance swaps need special handling
     if (
       rule.source.type === "leftIconInstance" ||
       rule.source.type === "rightIconInstance"
     ) {
       if (typeof value === "string") {
-        instanceSwaps.push({ target: rule.target, componentKey: value });
+        instanceSwaps.push({ target: resolvedTarget, componentKey: value });
       }
       continue;
     }
 
     // Text and boolean properties can be set directly
-    properties[rule.target] = value;
+    properties[resolvedTarget] = value;
   }
 
   maybeApplyTagTextProperty(instance, content, mapping, properties);
@@ -131,9 +136,60 @@ function extractValue(
     case "static":
       return source.value;
 
+    case "textFromFrame":
+      return getNamedFrameText(content.namedFrameTexts, source.frameName);
+
     default:
       return null;
   }
+}
+
+function resolvePropertyTarget(
+  instance: InstanceNode,
+  targetPropertyName: string
+): string | null {
+  const componentProperties = instance.componentProperties;
+  if (!componentProperties) {
+    return targetPropertyName;
+  }
+
+  if (targetPropertyName in componentProperties) {
+    return targetPropertyName;
+  }
+
+  const normalizedTarget = normalizeName(targetPropertyName);
+  const match = Object.keys(componentProperties).find(
+    (key) => normalizeName(key) === normalizedTarget
+  );
+
+  return match ?? null;
+}
+
+function getNamedFrameText(
+  namedFrameTexts: Record<string, string>,
+  frameName: string
+): string | null {
+  const exact = namedFrameTexts[frameName.toLowerCase()];
+  if (exact !== undefined) {
+    return exact;
+  }
+
+  const normalizedTarget = normalizeName(frameName, true);
+  const match = Object.entries(namedFrameTexts).find(
+    ([key]) => normalizeName(key, true) === normalizedTarget
+  );
+  return match ? match[1] : null;
+}
+
+function normalizeName(value: string, stripFrameSuffix = false): string {
+  let normalized = value.toLowerCase().trim();
+  normalized = normalized.replace(/^[^\w\s]+\s*/, "");
+  normalized = normalized.replace(/#[\d:]+$/, "").trim();
+  if (stripFrameSuffix) {
+    normalized = normalized.replace(/\s*frame$/, "").trim();
+  }
+  normalized = normalized.replace(/\s+/g, " ");
+  return normalized;
 }
 
 /**

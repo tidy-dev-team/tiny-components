@@ -78,7 +78,8 @@ export type SourceExtractor =
   | { type: "hasRightIcon" }
   | { type: "leftIconInstance" }
   | { type: "rightIconInstance" }
-  | { type: "static"; value: string | boolean };
+  | { type: "static"; value: string | boolean }
+  | { type: "textFromFrame"; frameName: string };
 
 // ============================================
 // Extracted Content (runtime)
@@ -90,6 +91,8 @@ export interface ExtractedContent {
   hasRightIcon: boolean;
   leftIconKey: string | null;
   rightIconKey: string | null;
+  /** Texts keyed by lowercased frame/group name, for targeted extraction. */
+  namedFrameTexts: Record<string, string>;
 }
 
 // ============================================
